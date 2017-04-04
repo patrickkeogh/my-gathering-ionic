@@ -1,0 +1,23 @@
+/* Empty. Add your own CSS if you like */
+
+.bar-primary {
+	background-color: #673AB7;
+}
+
+.bar-secondary {
+	background-color: #E91E63;
+}
+
+.title {
+	color: #FFFFFF;
+}
+
+.button-primary {
+	background-color: #673AB7;
+	color: #ffffff;
+}
+
+.button-secondary {
+	background-color: #E91E63;
+	color: #ffffff;
+}
