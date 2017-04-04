@@ -1,0 +1,6 @@
+{
+    "name": "My Gathering Ionic Application",
+    "description": "A simple Ionic app for MyGathering.com Website",
+    "repository": "https://github.com/patrickkeogh/my-gathering-ionic",
+    "keywords": ["ionic", "mygathering", "my-gathering"]
+}
