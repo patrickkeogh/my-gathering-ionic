@@ -99,9 +99,10 @@
       then(function(data) {
         removeToken();
         $rootScope.$broadcast('event:auth-logout-complete');
+        console.log("Logout Service:" + JSON.stringify(data));
         return data;
       }, function(error) {
-        console.log(error);
+        console.log(JSON.stringify(error));
         return error;
       });
     };

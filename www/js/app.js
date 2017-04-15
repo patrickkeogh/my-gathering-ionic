@@ -3,7 +3,8 @@
     
     angular
     .module('myGathering', [
-      'ionic'
+      'ionic',
+      'ngCordova'
     ])
     .config(config)
     .constant('Constants', {

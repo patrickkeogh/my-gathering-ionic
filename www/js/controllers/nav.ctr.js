@@ -119,7 +119,6 @@
 
         }); 
 
-
     };
 
     $scope.login = function() {
@@ -140,7 +139,7 @@
         if(data.status === 200) {
           
           console.log("Success:" + data.data.status);
-          $scope.message = 'You have successfully logged in.';
+          //$scope.message = 'You have successfully logged in.';
           //Globals.setUserStatus(Constants.UserStatus.authenticated);
           //$state.go('tab.main');
 
@@ -166,15 +165,24 @@
           
         console.log('Logout method called');
 
+        $scope.showLoading();
+
         var response = Authentication.logout();
 
         response.then(function(data) {
+
+          $scope.hideLoading();
 
           if(data.status === 200) {
             console.log("Success:" + data.data.status);
             
             $state.go('app.main');
+          } else {
+            //console.log("NO Success LOGOUT:" + data.data.status);
+
           }
+        }, function(error) {
+          console.log(error);
         });
       };
 
