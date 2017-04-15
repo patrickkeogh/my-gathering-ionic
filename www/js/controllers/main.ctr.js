@@ -15,7 +15,9 @@
     $scope.details = '';
     $scope.address_text = '';
 
-    $scope.search_address = {
+    $scope.search_address = {};
+
+    var empty_address = {
       location: {
         "type": "Point",
         "coordinates": [0,0]
@@ -76,6 +78,8 @@
 
           if (status === google.maps.GeocoderStatus.OK) {
             console.log('Results:' + JSON.stringify(results));
+            $scope.search_address = parseLocation(results[1]); 
+
           }
 
           $scope.hideLoading();
@@ -93,6 +97,52 @@
       });
 
     });
+
+    function parseLocation(location) {
+
+      var location_obj = empty_address;
+
+      location_obj.location.coordinates = [location.geometry.location.lng(), location.geometry.location.lat()];
+      location_obj.formatted_address = location.formatted_address;
+
+      var components = location.address_components;
+
+      components.forEach(function(types) {
+
+          var component_type = types.types[0];
+
+          switch(component_type) {
+            case 'country':
+              //console.log('Country:' + types.long_name);
+              location_obj.country = types.long_name;
+              location_obj.country_short = types.short_name;
+              break;
+            case 'locality':                
+              //console.log('Locality:' + types.long_name);
+              location_obj.locality = types.long_name;
+              break;
+            case 'sublocality_level_1':                
+              //console.log('SubLocality:' + types.long_name);
+              location_obj.locality = types.long_name;
+              break;
+            case 'administrative_area_level_1':                
+              //console.log('State:' + types.long_name);short
+              location_obj.state_prov = types.long_name;
+              break;
+            case 'postal_code':                
+              //console.log('Postal Code:' + types.long_name);
+              location_obj.postal_code = types.long_name;
+              break;
+            default:
+                //default code block
+          }
+        });
+
+        return location_obj;
+
+    }
+
+    
 
     $scope.showLoading = function() {
       $ionicLoading.show({
