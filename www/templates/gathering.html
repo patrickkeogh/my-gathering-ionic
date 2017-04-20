@@ -1,0 +1,24 @@
+<ion-view>
+<ion-nav-title class="nav-title">{{gathering.name}}</ion-nav-title>
+  <ion-content class="padding">
+    <div class="card">
+	   
+			   	<div class="item item-image">
+			   		<img ng-src="{{gathering.banner.url}}">   
+			    	<div class="panel-cost">FREE</div>  
+			  	</div>
+			   
+			   	<div class="item item-divider">
+			      	<div class="">{{gathering.gathering_start_date_time | date:'MMM d, y, h:mm a'}}</div>
+			   	</div>
+
+			   	<div class="item item-divider">
+			      	<div class="">{{gathering.location.name}}</div>
+			      	<div class="">{{gathering.location.locality}}, {{row.location.state_prov}}</div>
+			      	<div class="">{{gathering.location.country}}</div>
+
+			   	</div>
+			</div>
+  </ion-content>
+</ion-view>
+

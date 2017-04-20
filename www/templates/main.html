@@ -1,9 +1,51 @@
 <ion-view view-title="MyGathering.com">
 
 
-  <ion-content class="padding">
+  	<ion-content class="padding">
 
-  <h1>Main</h1>
+  		<!-- <ion-list class="padding">
+      		<ion-item ng-repeat="row in gatherings" href="#/app/gathering/{{row._id}}">
+        		<ion-card>
+			  		<ion-card-header>{{row.name}}</ion-card-header>
+					<ion-card-content>
+						<div class="item item-image">
+					   		<img ng-src="{{row.banner.url}}">   
+					    	<div class="panel-cost">FREE</div>  
+					  	</div>				    
+					</ion-card-content>
+
+				</ion-card>
+				
+			</ion-item>
+    	</ion-list> -->
+
+
+
+
+  		<div class="list list-inset">
+
+  			<div class="card" ng-repeat="row in gatherings" ng-click="goToDetails(row)">
+	   			<div class="item item-divider">
+	      			{{row.name}}
+	   			</div>
+	   
+			   	<div class="item item-image">
+			   		<img ng-src="{{row.banner.url}}">   
+			    	<div class="panel-cost">FREE</div>  
+			  	</div>
+			   
+			   	<div class="item item-divider">
+			      	<div class="">{{row.gathering_start_date_time | date:'MMM d, y, h:mm a'}}</div>
+			   	</div>
+
+			   	<div class="item item-divider">
+			      	<div class="">{{row.location.name}}</div>
+			      	<div class="">{{row.location.locality}}, {{row.location.state_prov}}</div>
+			      	<div class="">{{row.location.country}}</div>
+
+			   	</div>
+			</div>
+  		</div>
 
   <!-- <h3>LoggedIn: {{ isLoggedIn}}</h3>
 
@@ -16,5 +58,5 @@
   
     
     
-  </ion-content>
+  	</ion-content>
 </ion-view>

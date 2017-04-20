@@ -4,7 +4,11 @@
     angular
     .module('myGathering', [
       'ionic',
-      'ngCordova'
+      'ionic-timepicker',
+      'ionic-datepicker',
+      'ngCordova',
+      'ngMessages',
+      'google.places'
     ])
     .config(config)
     .constant('Constants', {
@@ -15,12 +19,59 @@
     })
     .run(run);
     
-    config.$inject = ['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider'];
+    config.$inject = ['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider', 'ionicTimePickerProvider', 'ionicDatePickerProvider'];
     run.$inject = ['$ionicPlatform'];
     
-    function config($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+    function config($stateProvider, $urlRouterProvider, $ionicConfigProvider, ionicTimePickerProvider, ionicDatePickerProvider) {
 
       $ionicConfigProvider.navBar.alignTitle('center');
+
+      var datePickerObj = {
+        inputDate: new Date(),
+        titleLabel: 'Select a Date',
+        setLabel: 'Set',
+        todayLabel: 'Today',
+        closeLabel: 'Close',
+        mondayFirst: false,
+        weeksList: ["S", "M", "T", "W", "T", "F", "S"],
+        monthsList: ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"],
+        templateType: 'popup',
+        from: new Date(2012, 8, 1),
+        to: new Date(2018, 8, 1),
+        showTodayButton: true,
+        dateFormat: 'dd MMMM yyyy',
+        closeOnSelect: false,
+        disableWeekdays: []
+      };
+
+
+      // disabledDates: [            //Optional
+      //   new Date(2016, 2, 16),
+      //   new Date(2015, 3, 16),
+      //   new Date(2015, 4, 16),
+      //   new Date(2015, 5, 16),
+      //   new Date('Wednesday, August 12, 2015'),
+      //   new Date("08-16-2016"),
+      //   new Date(1439676000000)
+      // ],
+      // from: new Date(2012, 1, 1), //Optional
+      // to: new Date(2016, 10, 30), //Optional
+      // inputDate: new Date(),      //Optional
+      // mondayFirst: true,          //Optional
+      // disableWeekdays: [0],       //Optional
+      // closeOnSelect: false,       //Optional
+
+      ionicDatePickerProvider.configDatePicker(datePickerObj);
+
+      var timePickerObj = {
+        inputTime: ((new Date()).getHours() * 60 * 60),
+        format: 12,
+        step: 15,
+        setLabel: 'OK',
+        closeLabel: 'Cancel'
+      };
+
+      ionicTimePickerProvider.configTimePicker(timePickerObj);
 
 
 
@@ -63,6 +114,24 @@
           'menu-content': {
             templateUrl: 'templates/search.html',
             controller: 'MainController'
+          }
+        }
+      })
+      .state('app.create', {
+        url: '/create',
+        views: {
+          'menu-content': {
+            templateUrl: 'templates/create.html',
+            controller: 'CreateController'
+          }
+        }
+      })
+      .state('app.gathering', {
+        url: '/gathering/:id',
+        views: {
+          'menu-content': {
+            templateUrl: 'templates/gathering.html',
+            controller: 'GatheringController'
           }
         }
       });

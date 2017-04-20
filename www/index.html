@@ -17,7 +17,11 @@
     </script>-->
 
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+
+    
+    
     <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="lib/angular-google-places-autocomplete/src/autocomplete.css">
 
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAf7uV3v7upRbATDfluOmSaoHMgsgXRkDM">
     </script>
@@ -31,6 +35,16 @@
 
     <script src="lib/ngCordova/dist/ng-cordova.js"></script>
 
+    <!-- path to ionic date picker -->
+    <script src="lib/ionic-datepicker/dist/ionic-datepicker.bundle.min.js"></script>
+
+    <!-- path to ionic time picker -->
+    <script src="lib/ionic-timepicker/dist/ionic-timepicker.bundle.min.js"></script>
+
+    <script src="lib/angular-google-places-autocomplete/src/autocomplete.js"></script>
+
+    <script src="lib/angular-messages/angular-messages.js"></script>
+
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
 
@@ -38,9 +52,14 @@
     <script src="js/app.js"></script>
     <script src="js/controllers/nav.ctr.js"></script>
     <script src="js/controllers/main.ctr.js"></script>
+    <script src="js/controllers/create.ctr.js"></script>
+    <script src="js/controllers/gathering.ctr.js"></script>
 
     <script src="js/services/auth.svc.js"></script>
     <script src="js/services/geocode.svc.js"></script>
+    <script src="js/services/utils.svc.js"></script>
+    <script src="js/services/api.gathering.svc.js"></script>
+
   </head>
 
   <body ng-app="myGathering">
