@@ -16,8 +16,8 @@
     <ion-header-bar class="bar-secondary">
       <h1 class="title">Menu Options</h1>
     </ion-header-bar>
-    <ion-content>
-      <ion-list>
+    <ion-content class="has-header-44" >
+      <ion-list >
         <ion-item menu-close ng-click="openModal(1)" ng-show="!isLoggedIn">
           Login
         </ion-item>
@@ -25,9 +25,10 @@
           Register
         </ion-item>
 
-        <ion-item ng-show="isLoggedIn">
+        <ion-item ng-show="isLoggedIn" class="item-loggedIn">
           Logged In As: {{currentUser.name}}
         </ion-item>
+        
         <ion-item menu-close ng-click="logout()" ng-show="isLoggedIn">
           Logout
         </ion-item>

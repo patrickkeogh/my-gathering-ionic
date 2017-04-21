@@ -55,6 +55,10 @@
     top: 20px !important;
 }
 
+.has-header-44 {
+    top: 44px !important;
+}
+
 .form-item {
 	height: 30px;
 }
@@ -84,6 +88,10 @@ label.item.has-error {
 
 }
 
+.panel-details {
+	font-size: 12px !important;
+}
+
 
 
 .button .icon {
@@ -93,4 +101,8 @@ label.item.has-error {
 .nav-title {
 	left: 66px;
 	right: 66px;
+}
+
+.item-loggedIn {
+	background-color: #E0E0E0;
 }

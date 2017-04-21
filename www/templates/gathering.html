@@ -16,7 +16,15 @@
 			      	<div class="">{{gathering.location.name}}</div>
 			      	<div class="">{{gathering.location.locality}}, {{row.location.state_prov}}</div>
 			      	<div class="">{{gathering.location.country}}</div>
-
+			   	</div>
+			   	<div class="item item-divider">
+			      	<div class="">{{gathering.type[0]._id}}</div>
+			   	</div>
+			   	<div class="item item-divider">
+			      	<div class="">{{gathering.topic[0]._id}}</div>
+			   	</div>
+			   	<div class="item item-divider item-text-wrap">
+			      	<div class="panel-details">{{gathering.description}}</div>
 			   	</div>
 			</div>
   </ion-content>
