@@ -6,28 +6,36 @@
   <ion-content class="padding has-subheader has-footer">
   	<div class="list">
 
-  			<div class="card" ng-repeat="row in gatherings" ng-click="goToDetails(row)">
-	   			<div class="item item-divider">
-	      			{{row.name}}
-	   			</div>
-	   
-			   	<div class="item item-image">
-			   		<img ng-src="{{row.banner.url}}">   
-			    	<div class="panel-cost">FREE</div>  
-			  	</div>
-			   
-			   	<div class="item item-divider">
-			      	<div class="">{{row.gathering_start_date_time | date:'MMM d, y, h:mm a'}}</div>
-			   	</div>
-
-			   	<div class="item item-divider">
-			      	<div class="">{{row.location.name}}</div>
-			      	<div class="">{{row.location.locality}}, {{row.location.state_prov}}</div>
-			      	<div class="">{{row.location.country}}</div>
-
-			   	</div>
+		<div class="card" ng-repeat="row in gatherings | limitTo:numToShow" ng-click="goToDetails(row)" >
+			<div class="item item-divider">
+  			{{row.name}}
 			</div>
-  		</div>
+
+				<!-- ng-repeat="item in items | limitTo:numberOfItemsToDisplay" -->
+
+		   	<div class="item item-image">
+		   		<img ng-src="{{row.banner.url}}">   
+		    	<div class="panel-cost">FREE</div>  
+		  	</div>
+		   
+		   	<div class="item item-divider">
+		      	<div class="">{{row.gathering_start_date_time | date:'MMM d, y, h:mm a'}}</div>
+		   	</div>
+
+		   	<div class="item item-divider">
+		      	<div class="">{{row.location.name}}</div>
+		      	<div class="">{{row.location.locality}}, {{row.location.state_prov}}</div>
+		      	<div class="">{{row.location.country}}</div>
+
+		   	</div>
+		</div>
+	</div>
+
+  	<ion-infinite-scroll
+        ng-if="areThereMoreRecsToShow()"
+        on-infinite="getRecs()" 
+        distance="10%">
+    </ion-infinite-scroll> 
   
 
   </ion-content>
