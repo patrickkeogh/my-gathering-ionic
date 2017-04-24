@@ -1,35 +1,46 @@
 <ion-view view-title="Search">
-<div class="bar bar-subheader">
-      <h2 class="title">Search Results</h2>
-    </div>
+	<ion-nav-buttons side="right" >
+        <a style="color: white;" class="button button-icon button-primary ion-ios-search" ng-click="openSearchModal()"></a> 
+     </ion-nav-buttons>
+
+     <ion-content class="padding has-menuheader has-footer" ng-hide="gatherings.length > 0">
+		<div>
+  			Use the search options to find exciting Gatherings around the world!
+  		</div>
+ 	</ion-content>
+
+<!-- 	<div class="bar bar-subheader">
+      	<h2 class="title">Search Results</h2>
+    </div> -->
 	
-  <ion-content class="padding has-subheader has-footer">
-  	<div class="list">
+  	<ion-content class="padding has-headerheader has-footer" ng-show="gatherings.length > 0">
+  		
+  		<div class="list" >
 
-		<div class="card" ng-repeat="row in gatherings | limitTo:numToShow" ng-click="goToDetails(row)" >
-			<div class="item item-divider">
-  			{{row.name}}
+			<div class="card" ng-repeat="row in gatherings | limitTo:numToShow" ng-click="goToDetails(row)" >
+				<div class="item item-divider">
+	  			{{row.name}}
+				</div>
+
+					<!-- ng-repeat="item in items | limitTo:numberOfItemsToDisplay" -->
+
+			   	<div class="item item-image">
+			   		<img ng-src="{{row.banner.url}}">   
+			    	<div class="panel-cost">FREE</div>  
+			  	</div>
+			   
+			   	<div class="item item-divider">
+			      	<div class="">{{row.gathering_start_date_time | date:'MMM d, y, h:mm a'}}</div>
+			   	</div>
+
+			   	<div class="item item-divider">
+			      	<div class="">{{row.location.name}}</div>
+			      	<div class="">{{row.location.locality}}, {{row.location.state_prov}}</div>
+			      	<div class="">{{row.location.country}}</div>
+
+			   	</div>
 			</div>
-
-				<!-- ng-repeat="item in items | limitTo:numberOfItemsToDisplay" -->
-
-		   	<div class="item item-image">
-		   		<img ng-src="{{row.banner.url}}">   
-		    	<div class="panel-cost">FREE</div>  
-		  	</div>
-		   
-		   	<div class="item item-divider">
-		      	<div class="">{{row.gathering_start_date_time | date:'MMM d, y, h:mm a'}}</div>
-		   	</div>
-
-		   	<div class="item item-divider">
-		      	<div class="">{{row.location.name}}</div>
-		      	<div class="">{{row.location.locality}}, {{row.location.state_prov}}</div>
-		      	<div class="">{{row.location.country}}</div>
-
-		   	</div>
 		</div>
-	</div>
 
   	<ion-infinite-scroll
         ng-if="areThereMoreRecsToShow()"
@@ -40,12 +51,6 @@
 
   </ion-content>
   <ion-footer-bar align-title="left" class="bar-secondary">
-	  <div class="buttons">
-	    <button class="button">Left Button</button>
-	  </div>
-	  <h1 class="title">Title!</h1>
-	  <div class="buttons" ng-click="doSomething()">
-	    <button class="button">Right Button</button>
-	  </div>
+	  
 	</ion-footer-bar>
 </ion-view>

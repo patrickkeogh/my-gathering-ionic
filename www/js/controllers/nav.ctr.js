@@ -14,43 +14,6 @@
     //console.log('Nav isloggedIn:' + $scope.isloggedIn);
     $scope.currentUser = Authentication.getCurrentUser();
 
-    $scope.address_details = '';
-    $scope.place = null;
-    $scope.searchCoords = null;
-    $scope.searchOptions = {
-      distance: 1000000000,
-      coords: null,
-      topic: null,
-      type: null 
-    };
-    
-    $scope.enableAddressField = false;
-
-    // Get the gathering types list
-    gatheringAPI.getTypes()
-    .then(function(data) {
-      console.log(data);
-      $scope.types = data.data;
-    })
-    .catch(function(err) {
-      console.log('failed to get gathering types ' + err);
-    });
-
-    // Get the gathering topics list
-    gatheringAPI.getTopics()
-    .then(function(data) {
-      console.log(data);
-      $scope.topics = data.data;
-    })
-    .catch(function(err) {
-      console.log('failed to get gathering topics ' + err);
-    });
-
-    $scope.autocompleteOptions = {
-        // componentRestrictions: { country: 'au' },
-        types: ['geocode']
-    };
-
     //getLoadedState();
 
     $scope.credentials = {
@@ -81,67 +44,27 @@
       $scope.oModal2 = modal;
     });
 
-    $ionicModal.fromTemplateUrl('templates/modals/search.modal.html', {
-      id: '3', // We need to use and ID to identify the modal that is firing the event!
-      scope: $scope,
-      backdropClickToClose: false,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      $scope.oModal3 = modal;
-    });
-
     $scope.openModal = function(index) {
+
+      console.log('Open Modal called in Nav ctr');
+
       if (index == 1) {
         $scope.oModal1.show();
       } 
       if (index == 2) {
         $scope.oModal2.show();
-      } 
-      if (index == 3) {
-        $scope.searchOptions = {
-          distance: 1000000000,
-          coords: null,
-          topic: null,
-          type: null 
-        };
-
-        $scope.address_details = '';
-        
-        $scope.newQuery = null;
-
-        $scope.oModal3.show();
-
-        document.getElementById('place').value = "";
-      } 
+      }       
     };
 
     $scope.closeModal = function(index) {
+      console.log('Close Modal called in Nav ctr');
       if (index == 1) {
         $scope.oModal1.hide();
       } 
       if (index == 2) {
         $scope.oModal2.hide();
       } 
-      if (index == 3) {
-        $scope.oModal3.hide();
-      }
     };
-
-
-
-
-
-    // Triggered in the login modal to close it
-    // $scope.cancel = function() {
-    //   $scope.modal.hide();
-    // };
-
-
-    // Open the login modal
-    // $scope.showLogin = function() {
-    //   console.log('Login Called');
-    //   $scope.modal.show();
-    // };
 
     $scope.register = function () {
 
@@ -256,60 +179,7 @@
         });
       };
 
-    $scope.searchForGatherings = function() {
-
-      console.log('SearchForGatherings() called:');
-
-      var query = null;
-
-      if($scope.searchCoords !== null) {
-
-        if(query === null){
-          query = {};
-        }
-
-        query['location.location'] = {
-          $near: {
-            $geometry: { type: "Point",  coordinates: $scope.searchCoords },
-            $minDistance: 0.01,
-            $maxDistance: $scope.searchOptions.distance
-
-          }
-        };
-      } else {
-        query = {};
-      } 
-
-      console.log("Search TYPE:" + $scope.searchOptions.type);
-
-      if ($scope.searchOptions.type === null) {
-        console.log("Search TYPE is BADDDDDDDDDDDDDDDDDDD");
-      }else{
-
-        query['type.0._id'] = $scope.searchOptions.type._id;       
-        
-      }
-      console.log("Search TOPIC:" + $scope.searchOptions.topic);
-
-      if ($scope.searchOptions.topic === null) {
-        console.log("Search TOPIC is BADDDDDDDDDDDDDDDDDDD");
-      }else{
-
-        query['topic.0._id'] = $scope.searchOptions.topic._id;       
-        
-      }       
-
-
-
-      console.log(query);
-
-      $scope.newQuery = query;
-
-      $rootScope.$broadcast('event:searchQueryChanged', query);
-
-      $scope.closeModal(3);
-
-    };  
+     
 
     $scope.showLoading = function() {
       $ionicLoading.show({
@@ -326,27 +196,27 @@
       });
     };
 
-    // function getLoadedState() {
+    function getLoadedState() {
 
-    //   // Get current state
-    //   var state = $state.current.name;
+      // Get current state
+      var state = $state.current.name;
 
-    //   console.log("GetLoadedState Called:" + state);
+      console.log("GetLoadedState Called:" + state);
 
       
 
-    //   switch(state) {
-    //     case 'app.search':
-    //       $scope.showSearchForm = true;
-    //     break;
+      switch(state) {
+        case 'app.search':
+          $scope.showSearchOptionsButton = true;
+        break;
         
-    //     default:
-    //       // No side bar needed
-    //       $scope.showSearchForm = false;
-    //   }
+        default:
+          // No serach options button needed
+          $scope.showSearchOptionsButton = false;
+      }
 
-    //   console.log('ShowSearchForm:' + $scope.showSearchForm);
-    // }
+      console.log('showSearchOptionsButton:' + $scope.showSearchOptionsButton);
+    }
 
     $scope.$on('event:auth-login-complete', function() {
       $scope.isLoggedIn = Authentication.isLoggedIn();
@@ -360,24 +230,10 @@
 
     $scope.$on('event:stateChanged', function() {
       console.log('event:stateChanged');
-      //getLoadedState();
+      getLoadedState();
     });
 
-    $scope.$on('g-places-autocomplete:select', function (event, param) {
-
-      var components = param.address_components;
-
-      if (typeof components === 'undefined') {
-        console.log("No address has been given");
-      }else{
-        console.log("We Have an address object");
-
-        //console.log("LAT:" + vm.address_details.geometry.location.lat);
-
-        $scope.searchCoords = [param.geometry.location.lng(), param.geometry.location.lat()];
-
-      }
-    });
+    
 
 
 
