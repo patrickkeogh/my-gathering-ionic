@@ -4,9 +4,9 @@
   .module('myGathering')
   .service('Utils', utils);
 
-  utils.$inject = [];
+  utils.$inject = ['$rootScope'];
 
-  function utils () {
+  function utils ($rootScope) {
 
     var blankGathering = {
       //id: 1,
@@ -39,6 +39,18 @@
       notes: ''
     };
 
+    var query = null;
+
+    var getSearchQuery = function() {
+      console.log('getSearchQuery:' + JSON.stringify(query));
+      return query;
+    };
+
+    var setSearchQuery = function(value) {
+      console.log('setSearchQueryCalled:' + JSON.stringify(value));
+      $rootScope.$broadcast('event:searchQueryChanged');
+      this.query = value;
+    };
 
     var getNewGatheringTemplate = function(gathering) {
       return blankGathering;
@@ -50,7 +62,9 @@
 
     return {
       getNewGatheringTemplate: getNewGatheringTemplate,
-      getNewLocationTemplate: getNewLocationTemplate
+      getNewLocationTemplate: getNewLocationTemplate,
+      getSearchQuery: getSearchQuery,
+      setSearchQuery: setSearchQuery
     };
 
 

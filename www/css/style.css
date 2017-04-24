@@ -22,6 +22,8 @@
 	color: #ffffff;
 }
 
+
+
 .align-left { float: left; } 
 .align-right { float: right; } 
 
@@ -32,6 +34,8 @@
 .no-padding {
 	padding-left: 0px !important;
 	padding-right: 0px !important;
+	padding-top: 0px !important;
+	padding-bottom: 0px !important;
 }
 
 .no-padding-left {
@@ -55,7 +59,11 @@
     top: 20px !important;
 }
 
-.has-header-44 {
+.has-subheader {
+    top: 67px !important;
+}
+
+.has-menuheader {
     top: 44px !important;
 }
 
@@ -106,3 +114,17 @@ label.item.has-error {
 .item-loggedIn {
 	background-color: #E0E0E0;
 }
+
+
+.bar-subheader {
+
+	background-color: #454545 !important;
+
+}
+
+.pac-container {
+        z-index: 3000 !important;
+        }
+.modal-open {
+            pointer-events: auto !important;
+        }

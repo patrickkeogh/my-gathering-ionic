@@ -8,6 +8,9 @@
         <button class="button button-icon button-primary ion-navicon" menu-toggle="left">
         </button>
       </ion-nav-buttons>
+      <ion-nav-buttons side="right">
+          <a style="color: white;" class="button button-icon button-primary ion-ios-search" ng-click="openModal(3)"></a> 
+      </ion-nav-buttons>
     </ion-nav-bar>
     <ion-nav-view name="menu-content"></ion-nav-view>
   </ion-side-menu-content>
@@ -16,7 +19,7 @@
     <ion-header-bar class="bar-secondary">
       <h1 class="title">Menu Options</h1>
     </ion-header-bar>
-    <ion-content class="has-header-44" >
+    <ion-content class="has-menuheader" >
       <ion-list >
         <ion-item menu-close ng-click="openModal(1)" ng-show="!isLoggedIn">
           Login
@@ -27,30 +30,34 @@
 
         <ion-item ng-show="isLoggedIn" class="item-loggedIn">
           Logged In As: {{currentUser.name}}
-        </ion-item>
-        
-        <ion-item menu-close ng-click="logout()" ng-show="isLoggedIn">
-          Logout
-        </ion-item>
+        </ion-item>        
 
         <ion-item menu-close href="#/app/main">
           Main
         </ion-item>
 
-        <ion-item menu-close href="#/app/search">
-          Search
-        </ion-item>
         <ion-item menu-close href="#/app/create">
           Create
         </ion-item>
-        <ion-item menu-close href="#/app/gathering">
-          Gathering
+
+        <ion-item menu-close href="#/app/search">
+          Search
         </ion-item>
+
+        <ion-item menu-close ng-click="logout()" ng-show="isLoggedIn">
+          Logout
+        </ion-item>
+        
+
       </ion-list>
 
-      <!-- <pre>LoggedIn: {{ isLoggedIn}}
+      <pre>SearchForm: {{ showSearchForm}}
 
-  LoggedInUser: {{ currentUser}}</pre> -->
+<!--           LoggedInUser: {{ currentUser}} -->
+          <br>
+          Seach Coords: {{ searchCoords}}
+      </pre>
     </ion-content>
+
   </ion-side-menu>
 </ion-side-menus>

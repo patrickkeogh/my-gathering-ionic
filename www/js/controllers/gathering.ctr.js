@@ -47,10 +47,6 @@
          console.log("The loading indicator is now hidden");
       });
     };
-
-
-
-
     
   }
 

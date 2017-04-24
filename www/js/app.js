@@ -20,7 +20,7 @@
     .run(run);
     
     config.$inject = ['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider', 'ionicTimePickerProvider', 'ionicDatePickerProvider'];
-    run.$inject = ['$ionicPlatform'];
+    run.$inject = ['$ionicPlatform', '$rootScope'];
     
     function config($stateProvider, $urlRouterProvider, $ionicConfigProvider, ionicTimePickerProvider, ionicDatePickerProvider) {
 
@@ -113,7 +113,7 @@
         views: {
           'menu-content': {
             templateUrl: 'templates/search.html',
-            controller: 'MainController'
+            controller: 'SearchController'
           }
         }
       })
@@ -161,7 +161,15 @@
       $urlRouterProvider.otherwise('/app/main');
     }
 
-    function run($ionicPlatform) {
+    function run($ionicPlatform, $rootScope) {
+
+      // Redirect to login if route requires auth and you're not logged in
+        $rootScope.$on('$stateChangeSuccess', function(event, next) {
+            console.log("We have a state change");
+
+            $rootScope.$broadcast('event:stateChanged');
+         
+        });
 
       $ionicPlatform.ready(function() {
         if(window.cordova && window.cordova.plugins.Keyboard) {
@@ -176,6 +184,7 @@
         }
         if(window.StatusBar) {
           StatusBar.styleDefault();
+          StatusBar.backgroundColorByHex('#565656');
         }
       });
         

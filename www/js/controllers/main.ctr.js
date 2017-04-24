@@ -104,23 +104,15 @@
 
     function getGatherings(query) {
       //console.log("Query Used:" + JSON.stringify(query));
-          gatheringAPI.getGatherings(1, 5, query)
-          .then(function(data) {
-              //console.log('Results:' + JSON.stringify(results));
-              console.log(data);
-
-              $scope.gatherings = data.data;
-
-              
-
-              //getNewChunks();
-            
-
-        })
-          .catch(function(err) {
-            console.log('failed to get gathering types ' + err);
-          });
-      }
+      gatheringAPI.getGatherings(1, 5, query)
+      .then(function(data) {
+          console.log(data);
+          $scope.gatherings = data.data;
+      })
+      .catch(function(err) {
+        console.log('failed to get gatherings: ' + err);
+      });
+    }
 
     function parseLocation(location) {
 

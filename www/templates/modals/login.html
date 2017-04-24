@@ -1,0 +1,36 @@
+<ion-modal-view>
+  <ion-header-bar class="bar bar-header bar-primary">
+    <h1 class="title">Sign in to your account</h1>
+    <button class="button button-clear button-primary">
+    <a style="color: white;" class="button button-icon button-primary ion-ios-close-empty" ng-click="closeModal(1)"></a>
+  </button>
+  </ion-header-bar>
+
+  <ion-content class="padding has-menuheader">
+    <div class="list">
+      
+      <div class="row no-padding">
+        <div class="col no-padding">
+          <label class="item item-input item-stacked-label">
+            <span class="input-label label-primary">Email</span>
+              <input type="email" placeholder="Email Address" ng-model="credentials.username" required>
+          </label>          
+        </div>
+      </div>
+
+      <div class="row no-padding">
+        <div class="col no-padding">
+          <label class="item item-input item-stacked-label">
+            <span class="input-label label-primary">Password</span>
+              <input type="password" placeholder="Password" ng-model="credentials.password" required>
+          </label>          
+        </div>
+      </div>
+
+      <button class="button button-full button-secondary" ng-click="login()">Sign In</button>
+    </div>
+    <div>
+      <h4>{{message}}</h4>
+    </div>
+  </ion-content>
+</ion-modal-view>

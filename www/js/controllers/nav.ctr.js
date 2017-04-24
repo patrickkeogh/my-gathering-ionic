@@ -5,14 +5,53 @@
     .module('myGathering')
     .controller('NavController', NavController);
 
-  NavController.$inject = ['$scope', '$state', '$ionicModal', '$ionicPopup', '$ionicLoading', 'Authentication'];
+  NavController.$inject = ['$scope', '$rootScope', '$state', 'gatheringAPI', '$ionicModal', '$ionicPopup', '$ionicLoading', 'Authentication', 'Utils'];
 
-  function NavController($scope, $state, $ionicModal, $ionicPopup, $ionicLoading, Authentication) {
+  function NavController($scope, $rootScope, $state, gatheringAPI, $ionicModal, $ionicPopup, $ionicLoading, Authentication, Utils) {
     //var vm = this;
 
     $scope.isLoggedIn = Authentication.isLoggedIn();
     //console.log('Nav isloggedIn:' + $scope.isloggedIn);
     $scope.currentUser = Authentication.getCurrentUser();
+
+    $scope.address_details = '';
+    $scope.place = null;
+    $scope.searchCoords = null;
+    $scope.searchOptions = {
+      distance: 1000000000,
+      coords: null,
+      topic: null,
+      type: null 
+    };
+    
+    $scope.enableAddressField = false;
+
+    // Get the gathering types list
+    gatheringAPI.getTypes()
+    .then(function(data) {
+      console.log(data);
+      $scope.types = data.data;
+    })
+    .catch(function(err) {
+      console.log('failed to get gathering types ' + err);
+    });
+
+    // Get the gathering topics list
+    gatheringAPI.getTopics()
+    .then(function(data) {
+      console.log(data);
+      $scope.topics = data.data;
+    })
+    .catch(function(err) {
+      console.log('failed to get gathering topics ' + err);
+    });
+
+    $scope.autocompleteOptions = {
+        // componentRestrictions: { country: 'au' },
+        types: ['geocode']
+    };
+
+    //getLoadedState();
 
     $scope.credentials = {
       name : "",
@@ -22,15 +61,8 @@
 
     $scope.message = "";
 
-    // Create the login modal that we will use later
-    // $ionicModal.fromTemplateUrl('templates/models/login.html', {
-    //   scope: $scope
-    // }).then(function(modal) {
-    //   $scope.modal = modal;
-    // });
-
     // Login Model
-    $ionicModal.fromTemplateUrl('templates/models/login.html', {
+    $ionicModal.fromTemplateUrl('templates/modals/login.html', {
       id: '1', // We need to use and ID to identify the modal that is firing the event!
       scope: $scope,
       backdropClickToClose: false,
@@ -40,7 +72,7 @@
     });
 
     // Modal 2
-    $ionicModal.fromTemplateUrl('templates/models/register.html', {
+    $ionicModal.fromTemplateUrl('templates/modals/register.html', {
       id: '2', // We need to use and ID to identify the modal that is firing the event!
       scope: $scope,
       backdropClickToClose: false,
@@ -49,15 +81,53 @@
       $scope.oModal2 = modal;
     });
 
+    $ionicModal.fromTemplateUrl('templates/modals/search.modal.html', {
+      id: '3', // We need to use and ID to identify the modal that is firing the event!
+      scope: $scope,
+      backdropClickToClose: false,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      $scope.oModal3 = modal;
+    });
+
     $scope.openModal = function(index) {
-      if (index == 1) $scope.oModal1.show();
-      else $scope.oModal2.show();
+      if (index == 1) {
+        $scope.oModal1.show();
+      } 
+      if (index == 2) {
+        $scope.oModal2.show();
+      } 
+      if (index == 3) {
+        $scope.searchOptions = {
+          distance: 1000000000,
+          coords: null,
+          topic: null,
+          type: null 
+        };
+
+        $scope.address_details = '';
+        
+        $scope.newQuery = null;
+
+        $scope.oModal3.show();
+
+        document.getElementById('place').value = "";
+      } 
     };
 
     $scope.closeModal = function(index) {
-      if (index == 1) $scope.oModal1.hide();
-      else $scope.oModal2.hide();
+      if (index == 1) {
+        $scope.oModal1.hide();
+      } 
+      if (index == 2) {
+        $scope.oModal2.hide();
+      } 
+      if (index == 3) {
+        $scope.oModal3.hide();
+      }
     };
+
+
 
 
 
@@ -186,6 +256,61 @@
         });
       };
 
+    $scope.searchForGatherings = function() {
+
+      console.log('SearchForGatherings() called:');
+
+      var query = null;
+
+      if($scope.searchCoords !== null) {
+
+        if(query === null){
+          query = {};
+        }
+
+        query['location.location'] = {
+          $near: {
+            $geometry: { type: "Point",  coordinates: $scope.searchCoords },
+            $minDistance: 0.01,
+            $maxDistance: $scope.searchOptions.distance
+
+          }
+        };
+      } else {
+        query = {};
+      } 
+
+      console.log("Search TYPE:" + $scope.searchOptions.type);
+
+      if ($scope.searchOptions.type === null) {
+        console.log("Search TYPE is BADDDDDDDDDDDDDDDDDDD");
+      }else{
+
+        query['type.0._id'] = $scope.searchOptions.type._id;       
+        
+      }
+      console.log("Search TOPIC:" + $scope.searchOptions.topic);
+
+      if ($scope.searchOptions.topic === null) {
+        console.log("Search TOPIC is BADDDDDDDDDDDDDDDDDDD");
+      }else{
+
+        query['topic.0._id'] = $scope.searchOptions.topic._id;       
+        
+      }       
+
+
+
+      console.log(query);
+
+      $scope.newQuery = query;
+
+      $rootScope.$broadcast('event:searchQueryChanged', query);
+
+      $scope.closeModal(3);
+
+    };  
+
     $scope.showLoading = function() {
       $ionicLoading.show({
         template: 'Logging in...',
@@ -201,6 +326,28 @@
       });
     };
 
+    // function getLoadedState() {
+
+    //   // Get current state
+    //   var state = $state.current.name;
+
+    //   console.log("GetLoadedState Called:" + state);
+
+      
+
+    //   switch(state) {
+    //     case 'app.search':
+    //       $scope.showSearchForm = true;
+    //     break;
+        
+    //     default:
+    //       // No side bar needed
+    //       $scope.showSearchForm = false;
+    //   }
+
+    //   console.log('ShowSearchForm:' + $scope.showSearchForm);
+    // }
+
     $scope.$on('event:auth-login-complete', function() {
       $scope.isLoggedIn = Authentication.isLoggedIn();
       $scope.currentUser = Authentication.getCurrentUser();
@@ -209,6 +356,27 @@
     $scope.$on('event:auth-logout-complete', function() {
       $scope.isLoggedIn = Authentication.isLoggedIn();
       $scope.currentUser = Authentication.getCurrentUser();
+    });
+
+    $scope.$on('event:stateChanged', function() {
+      console.log('event:stateChanged');
+      //getLoadedState();
+    });
+
+    $scope.$on('g-places-autocomplete:select', function (event, param) {
+
+      var components = param.address_components;
+
+      if (typeof components === 'undefined') {
+        console.log("No address has been given");
+      }else{
+        console.log("We Have an address object");
+
+        //console.log("LAT:" + vm.address_details.geometry.location.lat);
+
+        $scope.searchCoords = [param.geometry.location.lng(), param.geometry.location.lat()];
+
+      }
     });
 
 

@@ -1,0 +1,52 @@
+<ion-modal-view>
+  <ion-header-bar class="bar bar-header bar-primary">
+    <h1 class="title">Search Options</h1>
+    <button class="button button-clear button-primary">
+    <a style="color: white;" class="button button-icon button-primary ion-ios-close-empty" ng-click="closeModal(3)"></a>
+  </button>
+  </ion-header-bar>
+
+  <ion-content class="padding has-menuheader">
+    <div class="list">
+
+
+
+      <ion-radio ng-model="$parent.searchOptions.distance" ng-value="1000000000">No Limit</ion-radio>
+      <ion-radio ng-model="$parent.searchOptions.distance" ng-value="20000">Within 20km</ion-radio>
+      <ion-radio ng-model="$parent.searchOptions.distance" ng-value="50000">Within 50km</ion-radio> 
+      <ion-radio ng-model="$parent.searchOptions.distance" ng-value="100000">Within 100km</ion-radio> 
+
+      <label class="item item-input item-stacked-label">
+        <span class="input-label label-primary">Location</span>
+          <input name="location" type="text" g-places-autocomplete ng-model="place" 
+          id="place"
+          options="autocompleteOptions"
+          required
+          ng-disabled="searchOptions.distance === 1000000000"
+          placeholder="Select a location ..." />
+      </label> 
+
+      <label class="item item-select">
+        <select id="type" name="type" class="form-control"
+            required
+            ng-options="option._id for option in types track by option._id"
+            ng-model="searchOptions.type">
+            <option style="display:none" value="">Filter By Type</option>
+        </select>
+      </label>
+      <label class="item item-select">
+        <select id="topic" name="topic" class="form-control"
+            required
+            ng-options="option._id for option in topics track by option._id"
+            ng-model="searchOptions.topic">
+            <option style="display:none" value="">Filter By Topic</option>
+        </select>
+      </label>
+
+      <button class="button button-full button-secondary" ng-click="searchForGatherings()">Search</button>
+    </div>
+    <!-- <pre>Options: {{searchOptions | json}}<br>
+      Query: {{newQuery | json}}
+    </pre> -->
+  </ion-content>
+</ion-modal-view>
