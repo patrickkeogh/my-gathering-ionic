@@ -1,0 +1,44 @@
+<ion-view>
+	<ion-nav-title class="nav-title">{{gathering.name}}</ion-nav-title>
+  	<ion-content class="padding">
+    	<div class="card">
+	   
+		   	<div class="item item-image" ng-click="showBannerModel()">
+		   		<img ng-src="{{gathering.banner.url}}">   
+
+		  	</div>
+
+		  	<div class="item item-divider">
+		      	<div class="">FREE</div> 
+		   	</div>
+		   
+		   	<div class="item item-divider" ng-click="updateDate()">
+		      	<div class="">{{gathering.gathering_start_date_time | date:'MMM d, y, h:mm a'}}</div>
+		   	</div>
+
+		   	<div class="item item-divider">
+		      	<div class="">{{gathering.location.name}}</div>
+		      	<div class="">{{gathering.location.locality}}, {{row.location.state_prov}}</div>
+		      	<div class="">{{gathering.location.country}}</div>
+		   	</div>
+		   	<div class="item item-divider">
+		      	<div class="">{{gathering.type[0]._id}}</div>
+		   	</div>
+		   	<div class="item item-divider">
+		      	<div class="">{{gathering.topic[0]._id}}</div>
+		   	</div>
+		   	<div class="item item-divider item-text-wrap" ng-click="showDescriptionModel()">
+		      	<div class="panel-details">{{gathering.description}}</div>
+		   	</div>
+		</div>
+  	</ion-content>
+</ion-view>
+
+<!-- <div class="row">
+  <div class="col-75">
+    <input> 
+  </div>
+  <div class="col-25">
+    <button class="button button-assertive">Click</button>
+  </div>
+</div> -->

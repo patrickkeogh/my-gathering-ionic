@@ -33,12 +33,16 @@
           Main
         </ion-item>
 
-        <ion-item menu-close href="#/app/create">
+        <ion-item menu-close href="#/app/create" ng-show="isLoggedIn">
           Create
         </ion-item>
 
         <ion-item menu-close href="#/app/search">
           Search
+        </ion-item>
+
+        <ion-item menu-close href="#/app/created" ng-show="isLoggedIn">
+          My Gatherings
         </ion-item>
 
         <ion-item menu-close ng-click="logout()" ng-show="isLoggedIn">

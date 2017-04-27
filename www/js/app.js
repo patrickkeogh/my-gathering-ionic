@@ -8,7 +8,8 @@
       'ionic-datepicker',
       'ngCordova',
       'ngMessages',
-      'google.places'
+      'google.places',
+      'angular-filepicker'
     ])
     .config(config)
     .constant('Constants', {
@@ -19,12 +20,14 @@
     })
     .run(run);
     
-    config.$inject = ['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider', 'ionicTimePickerProvider', 'ionicDatePickerProvider'];
+    config.$inject = ['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider', 'ionicTimePickerProvider', 'ionicDatePickerProvider', 'filepickerProvider'];
     run.$inject = ['$ionicPlatform', '$rootScope'];
     
-    function config($stateProvider, $urlRouterProvider, $ionicConfigProvider, ionicTimePickerProvider, ionicDatePickerProvider) {
+    function config($stateProvider, $urlRouterProvider, $ionicConfigProvider, ionicTimePickerProvider, ionicDatePickerProvider, filepickerProvider) {
 
       $ionicConfigProvider.navBar.alignTitle('center');
+
+      filepickerProvider.setKey('ANNrSlVqZSbCvpZVLcwspz');
 
       var datePickerObj = {
         inputDate: new Date(),
@@ -82,23 +85,12 @@
       // Each state's controller can be found in controllers.js
       $stateProvider
 
-      // setup an abstract state for the tabs directive
-      // .state('tab', {
-      //   url: '/tab',
-      //   abstract: true,
-      //   templateUrl: 'templates/tabs.html',
-      //   controller: 'NavController as vm'
-      // })
-
       .state('app', {
         url: '/app',
         abstract: true,
         templateUrl: 'templates/menu-main.html',
         controller: 'NavController'
       })
-
-      // Each tab has its own nav history stack:
-
       .state('app.main', {
         url: '/main',
         views: {
@@ -134,6 +126,44 @@
             controller: 'GatheringController'
           }
         }
+      })
+      // .state('app.tabs', {
+      //   url: "/tabs",
+      //   views: {
+      //     'menu-content': {
+      //       templateUrl: "templates/tabs.html"
+      //     }
+      //   }
+      // })
+      .state('app.created', {
+        url: '/created',
+        cache: false,
+        views: {
+          'menu-content': {
+            templateUrl: 'templates/tabs/created.tab.html',
+            controller: 'ManageGatheringsController'
+          }
+        }
+      })
+      .state('app.manage', {
+        url: '/manage/:id',
+        cache: false,
+        views: {
+          'menu-content': {
+            templateUrl: 'templates/tabs/created.manage.tab.html',
+            controller: 'GatheringUpdateController'
+          }
+        }
+      })
+      .state('app.tabs.joined', {
+        url: '/joined',
+        cache: false,
+        views: {
+          'tab-joined': {
+            templateUrl: 'templates/tabs/joined.tab.html',
+            controller: 'ManageGatheringsController'
+          }
+        }
       });
 
 
@@ -165,7 +195,7 @@
 
       // Redirect to login if route requires auth and you're not logged in
         $rootScope.$on('$stateChangeSuccess', function(event, next) {
-            console.log("We have a state change");
+            //console.log("We have a state change");
 
             $rootScope.$broadcast('event:stateChanged');
          

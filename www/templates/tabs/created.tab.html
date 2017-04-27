@@ -1,0 +1,39 @@
+<ion-view>
+	<ion-nav-title class="nav-title">MyGatherings Created</ion-nav-title>
+  	<ion-content class="padding has-header has-footer" ng-show="gatherings.length > 0">
+  		
+  		<div class="list" >
+
+			<div class="card " ng-repeat="row in gatherings | limitTo:numToShow" ng-click="goToDetails(row)" >
+
+				<div class="item item-divider card-title">
+	  			{{row.name}}
+				</div>
+			   
+			   	<div class="item item-divider">
+			      	<div class="">{{row.gathering_start_date_time | date:'MMM d, y, h:mm a'}}</div>
+			   	</div>
+
+			   	<div class="item item-divider">
+			      	<div class="">{{row.location.name}}</div>
+			      	<div class="">{{row.location.locality}}, {{row.location.state_prov}}</div>
+			      	<div class="">{{row.location.country}}</div>
+			   	</div>
+			   	<div class="item item-divider">
+	  			{{row.status}}
+				</div>
+			</div>
+		</div>
+
+	  	<ion-infinite-scroll
+	        ng-if="areThereMoreRecsToShow()"
+	        on-infinite="getRecs()" 
+	        distance="50%">
+	    </ion-infinite-scroll> 
+  
+
+  	</ion-content class="padding">
+  	<ion-footer-bar align-title="center" class="bar-secondary">
+  		<h1 class="title">{{message}}</h1>	  
+	</ion-footer-bar>
+</ion-view>

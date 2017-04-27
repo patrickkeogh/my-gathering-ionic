@@ -53,7 +53,10 @@
 .item-select select {
 	width: 100% !important;
 	max-width: 100% !important;
+	font-size: 16px !important;
+	height: 54px !important;
 }
+
 
 .has-header {
     top: 20px !important;
@@ -128,3 +131,20 @@ label.item.has-error {
 .modal-open {
             pointer-events: auto !important;
         }
+
+.text-black {
+	color: #ffffff;
+}
+
+.card-title {
+	background-color: #343434 !important;
+	color: #ffffff;
+}
+
+.custom-icon {
+  color : red !important;
+}
+
+.custom-button {
+	font-size: 12px !important;
+}

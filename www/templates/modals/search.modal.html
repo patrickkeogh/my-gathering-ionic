@@ -10,13 +10,41 @@
     <div class="list">
 
 
+      <label class="item item-input item-stacked-label" ng-click="showDatePicker()" >
+          <div class="form-item" >{{selectedDate}}</div>
+      </label>
 
-      <ion-radio ng-model="$parent.searchOptions.distance" ng-value="1000000000">No Limit</ion-radio>
+
+
+      <ion-radio ng-model="$parent.searchOptions.distance" ng-value="1000000000">No Distance Limit</ion-radio>
       <ion-radio ng-model="$parent.searchOptions.distance" ng-value="20000">Within 20km</ion-radio>
       <ion-radio ng-model="$parent.searchOptions.distance" ng-value="50000">Within 50km</ion-radio> 
-      <ion-radio ng-model="$parent.searchOptions.distance" ng-value="100000">Within 100km</ion-radio> 
+      <ion-radio ng-model="$parent.searchOptions.distance" ng-value="100000">Within 100km</ion-radio>
+      <ion-radio ng-model="$parent.searchOptions.distance" ng-value="250000">Within 250km</ion-radio>  
 
-      <label class="item item-input item-stacked-label">
+      <!-- <input type="checkbox" name="name" 
+            ng-model="Model_Name" 
+            ng-true-value="'true'" 
+            ng-false-value="'false'" 
+            ng-checked="checkbox == "'true'"" > -->
+
+            <ion-checkbox
+                      ng-model="useCurrentAddress" 
+                      ng-checked="useCurrentAddress"
+                      ng-true-value="true" ng-false-value="false"
+                      ng-change="checkForCurrentAddress(useCurrentAddress)">
+          Use My Current Location
+        </ion-checkbox>
+
+     
+
+      <!-- <ion-checkbox ng-model="useCurrentAddress" >Use My Current Location</ion-checkbox>
+ -->
+      <ion-item ng-show="useCurrentAddress" class="item-loggedIn">
+          {{addressMessage}}
+      </ion-item>  
+      
+      <label class="item item-input item-stacked-label" ng-show="!useCurrentAddress">
         <span class="input-label label-primary">Location</span>
           <input name="location" type="text" g-places-autocomplete ng-model="place" 
           id="place"
@@ -27,6 +55,7 @@
       </label> 
 
       <label class="item item-select">
+        <span class="input-label label-primary">Type</span>
         <select id="type" name="type" class="form-control"
             required
             ng-options="option._id for option in types track by option._id"
@@ -34,7 +63,9 @@
             <option style="display:none" value="">Filter By Type</option>
         </select>
       </label>
+
       <label class="item item-select">
+        <span class="input-label label-primary">Topic</span>
         <select id="topic" name="topic" class="form-control"
             required
             ng-options="option._id for option in topics track by option._id"
@@ -46,7 +77,9 @@
       <button class="button button-full button-secondary" ng-click="searchForGatherings()">Search</button>
     </div>
     <pre>Options: {{searchOptions | json}}<br>
-      Query: {{newQuery | json}}
+      Query: {{newQuery | json}}<br>
+      SearchCoords: {{searchCoords}}<br>
+      SearchAddress: {{search_address | json}}
     </pre>
   </ion-content>
 </ion-modal-view>

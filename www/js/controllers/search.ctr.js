@@ -5,11 +5,27 @@
     .module('myGathering')
     .controller('SearchController', SearchController);
 
-  SearchController.$inject = ['$scope', '$rootScope', '$state', '$timeout', 'gatheringAPI', 'Utils', '$ionicScrollDelegate', '$ionicModal', '$ionicPlatform', '$ionicLoading'];
+  SearchController.$inject = [
+    '$scope', 
+    '$rootScope', 
+    '$state', 
+    '$timeout', 
+    '$filter',
+    'gatheringAPI',
+    'Utils', 
+    'Geocode',
+    '$ionicScrollDelegate', 
+    '$ionicModal', 
+    '$ionicPlatform', 
+    '$ionicLoading',
+    'ionicDatePicker',
+    '$cordovaGeolocation',
+    '$cordovaToast'];
 
-  function SearchController($scope, $rootScope, $state, $timeout, gatheringAPI, Utils, $ionicScrollDelegate, $ionicModal, $ionicPlatform, $ionicLoading) {
+  function SearchController($scope, $rootScope, $state, $timeout, $filter, gatheringAPI, Utils, Geocode, $ionicScrollDelegate, $ionicModal, $ionicPlatform, $ionicLoading, ionicDatePicker, $cordovaGeolocation, $cordovaToast) {
 
-    $scope.gatherings = {};
+    $scope.gatherings = [];
+    var empty_address = Utils.getNewLocationTemplate();
 
     $scope.address_details = '';
     $scope.place = null;
@@ -24,11 +40,17 @@
     $scope.enableAddressField = false;
 
     $scope.numToShow = 0;
+    $scope.numShowing = 0;
+    $scope.message = "";
+    $scope.useCurrentAddress = false;
+    $scope.addressMessage = '';
  
     $scope.autocompleteOptions = {
       // componentRestrictions: { country: 'au' },
       types: ['geocode']
     };
+
+    //constructFooterTag();
 
     // Get the gathering types list
     gatheringAPI.getTypes()
@@ -50,11 +72,9 @@
       console.log('failed to get gathering topics ' + err);
     });
 
-    console.log("Search Controller loaded");
+    //console.log("Search Controller loaded");
 
     $ionicPlatform.ready(function() {
-
-      $scope.showLoading();
 
       $ionicModal.fromTemplateUrl('templates/modals/search.modal.html', {
         id: '1', // We need to use and ID to identify the modal that is firing the event!
@@ -65,47 +85,125 @@
         $scope.objSeachModel = modal;
       });
 
+
+
       var query = Utils.getSearchQuery();
 
       if(null !== query) {
         getGatherings(query);
       }
 
+      getCurrentLocation();     
+
     });
 
-    $scope.openSearchModal = function() {
-      console.log('Open Modal called in Search ctr');
-      $scope.searchOptions = {
-        distance: 1000000000,
-        coords: null,
-        topic: null,
-        type: null 
-      };
+    var datePicker = {
+      callback: function (val) {  //Mandatory
+        if (typeof (val) === 'undefined') {
+          console.log('Date not selected');
+        } else {          
+          //$scope.selectedDate = new Date(val);
+          $scope.selectedDate = $filter('date')(new Date(val), "EEEE, MMMM d, y");
+        }
+      },
+      templateType: 'popup'       //Optional
+    };
 
-      $scope.address_details = '';
+    $scope.openSearchModal = function() {
+      //console.log('Open Modal called in Search ctr');
+      // $scope.searchOptions = {
+      //   distance: 1000000000,
+      //   coords: null,
+      //   topic: null,
+      //   type: null 
+      // };
+
+      // $scope.address_details = '';
         
-      $scope.newQuery = null;
+      // $scope.newQuery = null;
 
       $scope.objSeachModel.show();
 
-      document.getElementById('place').value = "";
+      //document.getElementById('place').value = "";
     };
 
     $scope.closeModal = function() {
-      console.log('Close Modal called in Search ctr');
+      //console.log('Close Modal called in Search ctr');
       $scope.objSeachModel.hide();
     };
 
+    function getCurrentLocation() {
+
+      $scope.showLoading();
+
+      Geocode.getCurrentLocation()
+        .then(function(data) {
+          //console.log(data);
+          //console.log('we  got your current location');
+          //$scope.topics = data.data;
+
+          $scope.search_address = data;
+
+          $scope.searchCoords = $scope.search_address.location.coordinates;
+          $scope.addressMessage = $scope.search_address.formatted_address;
+
+          $scope.useCurrentAddress = true;
+
+          $scope.hideLoading();
+
+
+        })
+        .catch(function(error) {
+          console.log('failed to get current location: ' + error);
+          $scope.addressMessage = error;
+          $scope.hideLoading();
+
+          $ionicPlatform.ready(function () {
+
+            // $cordovaToast
+            //   .show('You location is unavailable, please check your setting and try again', 'long', 'center')
+            //   .then(function (success) {
+            //       // success
+            //   }, function (error) {
+            //       // error
+            // });
+          }); 
 
 
 
+          //$scope.useCurrentAddress = false;
+        });
+
+    }
+
+    function constructFooterTag() {
+      
+      var ttlGatherings = 0;
+      var myGatherings = $scope.gatherings;
+
+      if(myGatherings === undefined) {        
+      } else {
+        ttlGatherings = myGatherings.length;
+      }
+
+      if($scope.numToShow > ttlGatherings){
+        $scope.numShowing = ttlGatherings;
+      } else {
+        $scope.numShowing = $scope.numToShow;
+      }
+
+      $scope.message = "Showing " + $scope.numShowing + " of " + ttlGatherings;
+
+    }
+    
     function getGatherings(query) {
       //console.log("Query Used:" + JSON.stringify(query));
 
       gatheringAPI.getGatherings(1, 5, query)
       .then(function(data) {
-          console.log(data);
+          //console.log(data);
           $scope.gatherings = data.data;
+          constructFooterTag();
       })
       .catch(function(err) {
         console.log('failed to get gatherings: ' + err);
@@ -136,19 +234,16 @@
         query = {};
       } 
 
-      console.log("Search TYPE:" + $scope.searchOptions.type);
-
       if ($scope.searchOptions.type === null) {
-        console.log("Search TYPE is BADDDDDDDDDDDDDDDDDDD");
+        //console.log("Search TYPE is BADDDDDDDDDDDDDDDDDDD");
       }else{
 
         query['type.0._id'] = $scope.searchOptions.type._id;       
         
       }
-      console.log("Search TOPIC:" + $scope.searchOptions.topic);
 
       if ($scope.searchOptions.topic === null) {
-        console.log("Search TOPIC is BADDDDDDDDDDDDDDDDDDD");
+        //console.log("Search TOPIC is BADDDDDDDDDDDDDDDDDDD");
       }else{
 
         query['topic.0._id'] = $scope.searchOptions.topic._id;       
@@ -157,7 +252,7 @@
 
 
 
-      console.log(query);
+      //console.log(query);
 
       getGatherings(query);
 
@@ -191,10 +286,11 @@
       $timeout(function(){
         // some function i wrote
         $scope.numToShow += 5;
+        constructFooterTag();
         $scope.$broadcast('scroll.infiniteScrollComplete');
         $scope.$broadcast('scroll.refreshComplete');
 
-     }, 5000);      
+     }, 3000);      
     };
 
     $scope.areThereMoreRecsToShow = function() {
@@ -211,14 +307,31 @@
         template: '<ion-spinner icon="bubbles"></ion-spinner><br/>Acquiring location!',
         duration: 3000
       }).then(function(){
-         console.log("The loading indicator is now displayed");
+         //console.log("The loading indicator is now displayed");
       });
     };
 
     $scope.hideLoading = function(){
       $ionicLoading.hide().then(function(){
-         console.log("The loading indicator is now hidden");
+         //console.log("The loading indicator is now hidden");
       });
+    };
+
+    $scope.showDatePicker = function(){
+      console.log('showDatePicker');
+      ionicDatePicker.openDatePicker(datePicker);
+    };
+
+    $scope.checkForCurrentAddress = function(value) {
+
+      console.log("check for address called:" + value);
+
+      if(value === true) {
+        getCurrentLocation();
+      } else {
+        //console.log('Do not use current address');
+        $scope.searchCoords = null;
+      }
     };
 
     $scope.$on('event:searchQueryChanged', function(event, val) {

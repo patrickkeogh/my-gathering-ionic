@@ -1,0 +1,30 @@
+<ion-modal-view>
+
+  <ion-header-bar class="bar bar-header bar-primary">
+    <h1 class="title">Edit Banner</h1>
+    <button class="button button-clear button-primary">
+    <a style="color: white;" class="button button-icon button-primary ion-ios-close-empty" ng-click="closeModal(3)"></a>
+  </button>
+  </ion-header-bar>
+
+    <ion-content class="padding has-menuheader">
+        <div class="list">
+
+            <div class="row no-padding">
+                <div class="col no-padding">
+                    <div class="item item-image">
+                <img ng-src="{{gathering.banner.url}}">   
+
+            </div>
+                </div>
+            </div>
+
+            <button class="button button-full button-secondary" ng-click="upload()">Select New Banner</button>
+            <button class="button button-full button-secondary" ng-click="updateBanner()">Save</button>
+        </div>
+
+    <pre>
+        Banner: {{uploadedPicture}}
+    </pre>
+    </ion-content>
+</ion-modal-view>

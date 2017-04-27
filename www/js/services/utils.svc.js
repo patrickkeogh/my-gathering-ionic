@@ -4,9 +4,9 @@
   .module('myGathering')
   .service('Utils', utils);
 
-  utils.$inject = ['$rootScope'];
+  utils.$inject = ['$rootScope', 'modalService'];
 
-  function utils ($rootScope) {
+  function utils ($rootScope, modalService) {
 
     var blankGathering = {
       //id: 1,
@@ -60,11 +60,22 @@
       return blankLocation;
     };
 
+    var showUpdateDescription = function(contact){
+      console.log('showUpdateDescription called in Utils service');
+      return modalService.show('templates/modals/update.description.modal.html', 'GatheringUpdateController as vm', contact);
+    };
+    
+    var showUpdateBanner = function(otherContact) {
+      return modalService.show('templates/modals/update.banner.modal.html', 'GatheringUpdateController as vm', otherContact);
+    };
+
     return {
       getNewGatheringTemplate: getNewGatheringTemplate,
       getNewLocationTemplate: getNewLocationTemplate,
       getSearchQuery: getSearchQuery,
-      setSearchQuery: setSearchQuery
+      setSearchQuery: setSearchQuery,
+      showUpdateDescription: showUpdateDescription,
+      showUpdateBanner: showUpdateBanner
     };
 
 

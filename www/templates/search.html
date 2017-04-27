@@ -1,19 +1,19 @@
 <ion-view view-title="Search">
 	<ion-nav-buttons side="right" >
-        <a style="color: white;" class="button button-icon button-primary ion-ios-search" ng-click="openSearchModal()"></a> 
-     </ion-nav-buttons>
+        <a style="color: white;" class="button button-icon button-primary ion-ios-search-strong" ng-click="openSearchModal()"></a> 
+    </ion-nav-buttons>
 
      <ion-content class="padding has-menuheader has-footer" ng-hide="gatherings.length > 0">
-		<div>
+		<h3 class="text-center">
   			Use the search options to find exciting Gatherings around the world!
-  		</div>
+  		</h3>
  	</ion-content>
 
 <!-- 	<div class="bar bar-subheader">
       	<h2 class="title">Search Results</h2>
     </div> -->
 	
-  	<ion-content class="padding has-headerheader has-footer" ng-show="gatherings.length > 0">
+  	<ion-content class="padding has-header has-footer" ng-show="gatherings.length > 0">
   		
   		<div class="list" >
 
@@ -42,15 +42,15 @@
 			</div>
 		</div>
 
-  	<ion-infinite-scroll
-        ng-if="areThereMoreRecsToShow()"
-        on-infinite="getRecs()" 
-        distance="10%">
-    </ion-infinite-scroll> 
+	  	<ion-infinite-scroll
+	        ng-if="areThereMoreRecsToShow()"
+	        on-infinite="getRecs()" 
+	        distance="50%">
+	    </ion-infinite-scroll> 
   
 
-  </ion-content>
-  <ion-footer-bar align-title="left" class="bar-secondary">
-	  
+  	</ion-content class="padding">
+  	<ion-footer-bar align-title="center" class="bar-secondary">
+  		<h1 class="title">{{message}}</h1>	  
 	</ion-footer-bar>
 </ion-view>

@@ -5,9 +5,9 @@
     .module('myGathering')
     .controller('MainController', MainController);
 
-  MainController.$inject = ['$scope', '$state', 'Geocode', 'gatheringAPI', '$ionicPlatform', '$ionicLoading', '$cordovaGeolocation'];
+  MainController.$inject = ['$scope', '$state', 'Utils', 'Geocode', 'gatheringAPI', '$ionicPlatform', '$ionicLoading', '$cordovaGeolocation'];
 
-  function MainController($scope, $state, Geocode, gatheringAPI, $ionicPlatform, $ionicLoading, $cordovaGeolocation) {
+  function MainController($scope, $state, Utils, Geocode, gatheringAPI, $ionicPlatform, $ionicLoading, $cordovaGeolocation) {
 
     $scope.gatherings = [];
 
@@ -19,19 +19,7 @@
 
     $scope.search_address = {};
 
-    var empty_address = {
-      location: {
-        "type": "Point",
-        "coordinates": [0,0]
-      },
-      country: '',
-      formatted_address: '',
-      locality: '',
-      postal_code: '',
-      state_prov: '',
-      name: '',
-      notes: ''
-    };
+    var empty_address = Utils.getNewLocationTemplate();
 
     $ionicPlatform.ready(function() {
       $scope.showLoading();

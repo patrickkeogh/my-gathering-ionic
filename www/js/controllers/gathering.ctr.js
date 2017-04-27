@@ -18,6 +18,7 @@
     $scope.id = $stateParams.id;
 
     $ionicPlatform.ready(function() {
+      
       $scope.showLoading();
 
       gatheringAPI.getGathering($scope.id)
@@ -47,6 +48,29 @@
          console.log("The loading indicator is now hidden");
       });
     };
+
+    $scope.showDescriptionModel = function() {
+
+      console.log("Show Update Description Model called in Gathering Controller");
+
+      Utils.showUpdateDescription('selected')
+      .then(function(result) {
+        if(result) {
+          // vm.selectedContact = result; 
+          console.log('We have a result:' + result);
+        }
+      });
+    };
+
+    $scope.updateDescription = function() {
+
+      console.log("Update description called in Gathering Controller");
+
+
+
+    };
+
+
     
   }
 
