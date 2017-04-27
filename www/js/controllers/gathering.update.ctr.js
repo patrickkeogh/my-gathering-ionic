@@ -19,10 +19,9 @@
 
     $scope.gathering = {};
     $scope.uploadedPicture = null;
- 
-    //$scope.gathering.name = "Gathering Details";
+    $scope.save = false;
 
-    console.log("Gathering Controller loaded");
+    //console.log("Gathering Controller loaded");
 
     $scope.id = $stateParams.id;
 
@@ -32,7 +31,7 @@
 
       gatheringAPI.getGathering($scope.id)
       .then(function(data) {
-        console.log(data.data);
+        //console.log(data.data);
         $scope.gathering = data.data[0];
         //$scope.hideLoading();
       })
@@ -62,6 +61,7 @@
             console.log(JSON.stringify(Blob));
             $scope.uploadedPicture = Blob;
             $scope.gathering.banner = Blob;
+            $scope.save = true;
             $scope.$apply();
         }
       );
@@ -97,35 +97,34 @@
 
     $scope.showBannerModel = function() {
 
-      console.log("Show Update Banner Model called in Gathering Controller");
+      //console.log("Show Update Banner Model called in Gathering Controller");
 
       Utils.showUpdateBanner('selected')
       .then(function(result) {
         if(result) {
-          // vm.selectedContact = result; 
-          console.log('We have a result:' + result);
+          $scope.gathering.banner = result;
         }
       });
+
     };
 
     $scope.updateDescription = function() {
-
-      console.log("Update description called in Gathering Controller");
-
+      //console.log("Update description called in Gathering Controller");
       $scope.closeModal('Joe');
-
     };
 
     $scope.updateBanner = function() {
 
-      console.log("Update descrnner called in Gathering Controller");
-
-      $scope.closeModal($scope.uploadedPicture);
-
-    };
-
-
-    
+      gatheringAPI.saveBanner($scope.id, $scope.uploadedPicture)
+      .then(function(data) {
+        $scope.closeModal($scope.uploadedPicture);
+        $scope.uploadedPicture = null;            
+      })
+      .catch(function(err) {
+        console.log('failed to upload banner ' + err);
+        $scope.closeModal($scope.uploadedPicture);
+      });
+    };    
   }
 
 })();
