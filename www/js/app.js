@@ -140,7 +140,7 @@
         cache: false,
         views: {
           'menu-content': {
-            templateUrl: 'templates/tabs/created.tab.html',
+            templateUrl: 'templates/created.html',
             controller: 'ManageGatheringsController'
           }
         }
@@ -150,17 +150,17 @@
         cache: false,
         views: {
           'menu-content': {
-            templateUrl: 'templates/tabs/created.manage.tab.html',
+            templateUrl: 'templates/created.manage.html',
             controller: 'GatheringUpdateController'
           }
         }
       })
-      .state('app.tabs.joined', {
+      .state('app.joined', {
         url: '/joined',
         cache: false,
         views: {
           'tab-joined': {
-            templateUrl: 'templates/tabs/joined.tab.html',
+            templateUrl: 'templates/joined.html',
             controller: 'ManageGatheringsController'
           }
         }

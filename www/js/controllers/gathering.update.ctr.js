@@ -48,14 +48,15 @@
         {
           mimetype: 'image/*',
           language: 'en',
-          services: ['CONVERT', 'COMPUTER','DROPBOX','GOOGLE_DRIVE','IMAGE_SEARCH', 'FACEBOOK', 'INSTAGRAM'],
+          services: ['CONVERT', 'COMPUTER','IMAGE_SEARCH'],
           conversions: ['crop'],
           cropRatio: 2/1,
           cropMin: [300, 150],
           // cropDim: [300, 150],
           cropMax: [2160, 1080],
           cropForce: true,
-          openTo: 'COMPUTER'
+          openTo: 'IMAGE_SEARCH',
+          container: 'modal'
         },
         function(Blob){
             console.log(JSON.stringify(Blob));
