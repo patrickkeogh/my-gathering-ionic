@@ -21,7 +21,7 @@
     .run(run);
     
     config.$inject = ['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider', 'ionicTimePickerProvider', 'ionicDatePickerProvider', 'filepickerProvider'];
-    run.$inject = ['$ionicPlatform', '$rootScope'];
+    run.$inject = ['$ionicPlatform', '$rootScope', 'Authentication'];
     
     function config($stateProvider, $urlRouterProvider, $ionicConfigProvider, ionicTimePickerProvider, ionicDatePickerProvider, filepickerProvider) {
 
@@ -89,16 +89,19 @@
         url: '/app',
         abstract: true,
         templateUrl: 'templates/menu-main.html',
-        controller: 'NavController'
+        controller: 'NavController',
+        authenticate: false
       })
-      .state('app.main', {
-        url: '/main',
+      .state('app.home', {
+        url: '/home',
         views: {
           'menu-content': {
             templateUrl: 'templates/main.html',
             controller: 'MainController'
           }
-        }
+        },
+        authenticate: false
+
       })
       .state('app.search', {
         url: '/search',
@@ -107,7 +110,8 @@
             templateUrl: 'templates/search.html',
             controller: 'SearchController'
           }
-        }
+        },
+        authenticate: false
       })
       .state('app.create', {
         url: '/create',
@@ -125,7 +129,8 @@
             templateUrl: 'templates/gathering.html',
             controller: 'GatheringController'
           }
-        }
+        },
+        authenticate: false
       })
       // .state('app.tabs', {
       //   url: "/tabs",
@@ -143,7 +148,8 @@
             templateUrl: 'templates/created.html',
             controller: 'ManageGatheringsController'
           }
-        }
+        },
+        authenticate: true
       })
       .state('app.manage', {
         url: '/manage/:id',
@@ -153,7 +159,18 @@
             templateUrl: 'templates/created.manage.html',
             controller: 'GatheringUpdateController'
           }
-        }
+        },
+        authenticate: true
+      })
+      .state('app.signout', {
+        url: '/signout',
+        views: {
+          'menu-content': {
+            templateUrl: 'templates/logout.html',
+            controller: 'AuthController'
+          }
+        },
+        authenticate: true
       })
       .state('app.joined', {
         url: '/joined',
@@ -162,7 +179,8 @@
           'tab-joined': {
             templateUrl: 'templates/joined.html',
             controller: 'ManageGatheringsController'
-          }
+          },
+          authenticate: true
         }
       });
 
@@ -188,16 +206,30 @@
       // })
 
       // if none of the above states are matched, use this as the fallback
-      $urlRouterProvider.otherwise('/app/main');
+      $urlRouterProvider.otherwise('/app/home');
     }
 
-    function run($ionicPlatform, $rootScope) {
+    function run($ionicPlatform, $rootScope, Authentication) {
 
       // Redirect to login if route requires auth and you're not logged in
         $rootScope.$on('$stateChangeSuccess', function(event, next) {
             //console.log("We have a state change");
 
             $rootScope.$broadcast('event:stateChanged');
+         
+        });
+
+        // Redirect to login if route requires auth and you're not logged in
+        $rootScope.$on('$stateChangeStart', function(event, next) {
+            //console.log("We have a state change");
+          
+            if (next.authenticate) {
+                console.log("Authentication is required");
+                if(!Authentication.isLoggedIn()) {
+                    console.log("User is not Authenticated");
+                    $location.path('/login');
+                }
+            }
          
         });
 
@@ -214,7 +246,7 @@
         }
         if(window.StatusBar) {
           StatusBar.styleDefault();
-          StatusBar.backgroundColorByHex('#565656');
+          //StatusBar.backgroundColorByHex('#565656');
         }
       });
         

@@ -52,11 +52,11 @@
       this.query = value;
     };
 
-    var getNewGatheringTemplate = function(gathering) {
+    var getNewGatheringTemplate = function() {
       return blankGathering;
     };
 
-    var getNewLocationTemplate = function(gathering) {
+    var getNewLocationTemplate = function() {
       return blankLocation;
     };
 

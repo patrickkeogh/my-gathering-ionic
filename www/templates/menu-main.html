@@ -18,46 +18,54 @@
     </ion-header-bar>
     <ion-content class="has-menuheader" >
       <ion-list >
-        <ion-item menu-close ng-click="openModal(1)" ng-show="!isLoggedIn">
-          Login
+        <ion-item menu-close class="item item-icon-left item-icon-right" ng-click="openModal(1)" ng-show="!isLoggedIn">
+          <i class="icon ion-log-in"></i> Sign In
+          <i class="icon ion-chevron-right"></i>
         </ion-item>
-        <ion-item menu-close ng-click="openModal(2)" ng-show="!isLoggedIn">
-          Register
+        <ion-item menu-close class="item item-icon-left item-icon-right" ng-click="openModal(2)" ng-show="!isLoggedIn">
+          <i class="icon ion-person-add"></i> Register
+          <i class="icon ion-chevron-right"></i>
         </ion-item>
 
         <ion-item ng-show="isLoggedIn" class="item-loggedIn">
-          Logged In As: {{currentUser.name}}
+          Hello, {{currentUser.name}}
         </ion-item>        
 
-        <ion-item menu-close href="#/app/main">
-          Main
+        <ion-item class="item item-icon-left item-icon-right" menu-close ui-sref="app.home">
+          <i class="icon ion-home"></i> Home
+          <i class="icon ion-chevron-right"></i>
         </ion-item>
 
-        <ion-item menu-close href="#/app/create" ng-show="isLoggedIn">
-          Create
+        <ion-item class="item item-icon-left item-icon-right" menu-close ui-sref="app.create" ng-show="isLoggedIn">
+          <i class="icon ion-plus"></i> Create
+          <i class="icon ion-chevron-right"></i>
         </ion-item>
 
-        <ion-item menu-close href="#/app/search">
-          Search
+        <ion-item class="item item-icon-left item-icon-right" menu-close ui-sref="app.search">
+          <i class="icon ion-search"></i> Search
+          <i class="icon ion-chevron-right"></i>
         </ion-item>
 
-        <ion-item menu-close href="#/app/created" ng-show="isLoggedIn">
-          My Gatherings
+        <ion-item class="item item-icon-left item-icon-right" menu-close ui-sref="app.created"  ng-show="isLoggedIn">
+          <i class="icon ion-star"></i> MyGatherings
+          <i class="icon ion-chevron-right"></i>
         </ion-item>
 
-        <ion-item menu-close ng-click="logout()" ng-show="isLoggedIn">
-          Logout
+        <ion-item class="item item-icon-left item-icon-right" menu-close ui-sref="app.signout" ng-show="isLoggedIn">
+          <i class="icon ion-log-out"></i> Sign Out
+          <i class="icon ion-chevron-right"></i>
         </ion-item>
+
         
 
       </ion-list>
 
-      <pre>SearchForm: {{ showSearchOptionsButton}}
+      <!-- <pre>SearchForm: {{ showSearchOptionsButton}}
 
-<!--           LoggedInUser: {{ currentUser}} -->
+          LoggedInUser: {{ currentUser}}
           <br>
           Seach Coords: {{ searchCoords}}
-      </pre>
+      </pre> -->
     </ion-content>
 
   </ion-side-menu>
