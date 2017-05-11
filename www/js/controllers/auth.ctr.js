@@ -24,16 +24,16 @@
 
     $scope.confirmSignout = function() {
 
-      // $cordovaToast.showLongBottom('Here is a message').then(function(success) {
-      //   // success
-      //   //$state.go('app.home');
-      // }, function (error) {
-      //   // error
-      // });
-
       logout();
 
-      //$state.go('app.home');
+    };
+
+    $scope.cancelSignout = function() {
+      $ionicHistory.nextViewOptions({
+        disableBack: true
+      });
+      
+      $state.go('app.home');
     };
 
     function logout() {
@@ -51,6 +51,12 @@
           if(data.status === 200) {
             console.log("Success:" + data.data.status);
 
+            $cordovaToast.showLongBottom('You have successfully signed out!').then(function(success) {
+
+            }, function (error) {
+              // error
+            });
+
             $ionicHistory.nextViewOptions({
               disableBack: true
             });
@@ -67,7 +73,7 @@
 
     $scope.showLoading = function() {
       $ionicLoading.show({
-        template: 'Logging in...',
+        template: 'Logging out...',
         duration: 3000
       }).then(function(){
          console.log("The loading indicator is now displayed");
