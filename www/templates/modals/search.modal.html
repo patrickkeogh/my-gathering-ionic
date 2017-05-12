@@ -9,18 +9,63 @@
   <ion-content class="padding has-menuheader">
     <div class="list">
 
+      <!-- <pre>Date Filter:{{searchOptions | json}}</pre> -->
 
-      <label class="item item-input item-stacked-label" ng-click="showDatePicker()" >
-          <div class="form-item" >{{selectedDate}}</div>
+      <ion-item class="card-title">
+          Search Results Count: {{gatherings.length}}
+      </ion-item>  
+
+      <ion-item class="card-body">
+        <label class="item item-select">
+          <span class="input-label label-primary">Date Filter</span>
+          <select id="dateFilter" class="form-control"
+              ng-options="data.name for data in dateSearchOptions track by data.value"
+              ng-model="searchOptions.dateFilter"  ng-change="updateQuery()"> 
+          </select> 
+
+        </label>
+
+        <label class="item item-input" ng-click="showDatePicker()" ng-show="!isDateDisabled && searchOptions.dateFilter.value !== 0" >
+          <div class="form-item" >{{selectedDate | date: 'EEEE, MMMM d, y'}}</div>
       </label>
 
+      <label class="item item-input" ng-show="isDateDisabled && searchOptions.dateFilter.value !== 0" >
+          <div class="form-item" >{{selectedDate | date: 'EEEE, MMMM d, y'}}</div>
+      </label>
+      </ion-item> 
 
+      <ion-item class="card-body">
+          <ion-radio ng-change="updateQuery()" ng-model="$parent.searchOptions.distance" ng-value="1000000000">No Distance Limit</ion-radio>
+          <ion-radio ng-change="updateQuery()" ng-model="$parent.searchOptions.distance" ng-value="20000">Within 20km</ion-radio>
+          <ion-radio ng-change="updateQuery()" ng-model="$parent.searchOptions.distance" ng-value="50000">Within 50km</ion-radio> 
+          <ion-radio ng-change="updateQuery()" ng-model="$parent.searchOptions.distance" ng-value="100000">Within 100km</ion-radio>
+          <ion-radio ng-change="updateQuery()" ng-model="$parent.searchOptions.distance" ng-value="250000">Within 250km</ion-radio>
 
-      <ion-radio ng-model="$parent.searchOptions.distance" ng-value="1000000000">No Distance Limit</ion-radio>
-      <ion-radio ng-model="$parent.searchOptions.distance" ng-value="20000">Within 20km</ion-radio>
-      <ion-radio ng-model="$parent.searchOptions.distance" ng-value="50000">Within 50km</ion-radio> 
-      <ion-radio ng-model="$parent.searchOptions.distance" ng-value="100000">Within 100km</ion-radio>
-      <ion-radio ng-model="$parent.searchOptions.distance" ng-value="250000">Within 250km</ion-radio>  
+          <div ng-show="searchOptions.distance !== 1000000000">
+            <ion-checkbox
+            ng-model="useCurrentAddress" 
+            ng-checked="useCurrentAddress"
+            ng-true-value="true" ng-false-value="false"
+            ng-change="checkForCurrentAddress(useCurrentAddress)">
+            Use My Current Location
+          </ion-checkbox> 
+          <ion-item ng-show="useCurrentAddress" class="item-loggedIn">
+            {{addressMessage}}
+          </ion-item>
+
+          <label class="item item-input" ng-show="!useCurrentAddress">
+              <input name="location" type="text" g-places-autocomplete ng-model="place" 
+              id="place"
+              options="autocompleteOptions"
+              required
+              placeholder="Select a location ..." />
+          </label>   
+          </div>  
+          
+          
+
+      </ion-item>
+
 
       <!-- <input type="checkbox" name="name" 
             ng-model="Model_Name" 
@@ -28,53 +73,49 @@
             ng-false-value="'false'" 
             ng-checked="checkbox == "'true'"" > -->
 
-            <ion-checkbox
-                      ng-model="useCurrentAddress" 
-                      ng-checked="useCurrentAddress"
-                      ng-true-value="true" ng-false-value="false"
-                      ng-change="checkForCurrentAddress(useCurrentAddress)">
-          Use My Current Location
-        </ion-checkbox>
+            
 
      
 
       <!-- <ion-checkbox ng-model="useCurrentAddress" >Use My Current Location</ion-checkbox>
  -->
-      <ion-item ng-show="useCurrentAddress" class="item-loggedIn">
-          {{addressMessage}}
-      </ion-item>  
       
-      <label class="item item-input item-stacked-label" ng-show="!useCurrentAddress">
-        <span class="input-label label-primary">Location</span>
-          <input name="location" type="text" g-places-autocomplete ng-model="place" 
-          id="place"
-          options="autocompleteOptions"
-          required
-          ng-disabled="searchOptions.distance === 1000000000"
-          placeholder="Select a location ..." />
-      </label> 
-
-      <label class="item item-select">
+      <ion-item class="card-body">
+          <label class="item item-select">
         <span class="input-label label-primary">Type</span>
         <select id="type" name="type" class="form-control"
             required
             ng-options="option._id for option in types track by option._id"
-            ng-model="searchOptions.type">
+            ng-model="searchOptions.type"
+            ng-change="updateQuery()">
             <option style="display:none" value="">Filter By Type</option>
         </select>
       </label>
+      </ion-item> 
+
+      <ion-item class="card-body">
 
       <label class="item item-select">
         <span class="input-label label-primary">Topic</span>
         <select id="topic" name="topic" class="form-control"
             required
             ng-options="option._id for option in topics track by option._id"
-            ng-model="searchOptions.topic">
+            ng-model="searchOptions.topic"
+            ng-change="updateQuery()">
             <option style="display:none" value="">Filter By Topic</option>
         </select>
       </label>
 
-      <button class="button button-full button-secondary" ng-click="searchForGatherings()">Search</button>
+
+      </ion-item>
+
+      <ion-item class="card-body">
+        <button class="button button-full button-balanced" ng-click="resetFilters()">Reset Filters</button>      
+      </ion-item>
+
+      <ion-item class="card-body">
+        <button class="button button-full button-secondary" ng-click="searchForGatherings()">Search</button>      
+      </ion-item>
     </div>
     <!-- <pre>Options: {{searchOptions | json}}<br>
       Query: {{newQuery | json}}<br>
@@ -82,4 +123,5 @@
       SearchAddress: {{search_address | json}}
     </pre> -->
   </ion-content>
+
 </ion-modal-view>

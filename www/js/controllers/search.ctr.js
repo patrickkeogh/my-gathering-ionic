@@ -9,6 +9,7 @@
     '$scope', 
     '$rootScope', 
     '$state', 
+    'moment',
     '$timeout', 
     '$filter',
     'gatheringAPI',
@@ -22,10 +23,20 @@
     '$cordovaGeolocation',
     '$cordovaToast'];
 
-  function SearchController($scope, $rootScope, $state, $timeout, $filter, gatheringAPI, Utils, Geocode, $ionicScrollDelegate, $ionicModal, $ionicPlatform, $ionicLoading, ionicDatePicker, $cordovaGeolocation, $cordovaToast) {
+  function SearchController($scope, $rootScope, $state, moment, $timeout, $filter, gatheringAPI, Utils, Geocode, $ionicScrollDelegate, $ionicModal, $ionicPlatform, $ionicLoading, ionicDatePicker, $cordovaGeolocation, $cordovaToast) {
 
     $scope.gatherings = [];
     var empty_address = Utils.getNewLocationTemplate();
+    $scope.dateSearchOptions = Utils.getDateSearchOptions();
+
+    //$scope.dateFilter = $scope.dateSearchOptions[3];
+
+    $scope.start_date = new Date();
+    $scope.selectedDate = new Date();
+
+    $scope.isDateDisabled = false;
+
+
 
     $scope.address_details = '';
     $scope.place = null;
@@ -34,8 +45,11 @@
       distance: 1000000000,
       coords: null,
       topic: null,
-      type: null 
+      type: null,
+      dateFilter: $scope.dateSearchOptions[3]
     };
+
+
     
     $scope.enableAddressField = false;
 
@@ -85,8 +99,6 @@
         $scope.objSeachModel = modal;
       });
 
-
-
       var query = Utils.getSearchQuery();
 
       if(null !== query) {
@@ -102,29 +114,20 @@
         if (typeof (val) === 'undefined') {
           console.log('Date not selected');
         } else {          
-          //$scope.selectedDate = new Date(val);
-          $scope.selectedDate = $filter('date')(new Date(val), "EEEE, MMMM d, y");
+          $scope.selectedDate = new Date(val);
+
+          $scope.updateQuery();
+
+
+
+          //$scope.selectedDate = $filter('date')(new Date(val), "EEEE, MMMM d, y");
         }
       },
       templateType: 'popup'       //Optional
     };
 
     $scope.openSearchModal = function() {
-      //console.log('Open Modal called in Search ctr');
-      // $scope.searchOptions = {
-      //   distance: 1000000000,
-      //   coords: null,
-      //   topic: null,
-      //   type: null 
-      // };
-
-      // $scope.address_details = '';
-        
-      // $scope.newQuery = null;
-
       $scope.objSeachModel.show();
-
-      //document.getElementById('place').value = "";
     };
 
     $scope.closeModal = function() {
@@ -133,6 +136,8 @@
     };
 
     function getCurrentLocation() {
+
+      console.log('getCurrentLocation Called');
 
       $scope.showLoading();
 
@@ -145,11 +150,27 @@
           $scope.search_address = data;
 
           $scope.searchCoords = $scope.search_address.location.coordinates;
-          $scope.addressMessage = $scope.search_address.formatted_address;
+          $scope.searchOptions.coords = $scope.search_address.location.coordinates;
+
+          $scope.addressMessage = '';
+
+          if($scope.search_address.locality !== '') {
+            $scope.addressMessage += $scope.search_address.locality + ', ';
+          }
+
+          if($scope.search_address.state_prov !== '') {
+            $scope.addressMessage += $scope.search_address.state_prov;
+          }
+
+          if($scope.search_address.country_short !== '') {
+            $scope.addressMessage += ", " + $scope.search_address.country_short;
+          }
 
           $scope.useCurrentAddress = true;
 
           $scope.hideLoading();
+
+          $scope.updateQuery();
 
 
         })
@@ -167,6 +188,7 @@
             //   }, function (error) {
             //       // error
             // });
+
           }); 
 
 
@@ -197,68 +219,155 @@
     }
     
     function getGatherings(query) {
-      //console.log("Query Used:" + JSON.stringify(query));
+      console.log("Query Used:" + JSON.stringify(query));
 
       gatheringAPI.getGatherings(1, 5, query)
       .then(function(data) {
-          //console.log(data);
+          console.log(data);
           $scope.gatherings = data.data;
-          constructFooterTag();
+          //constructFooterTag();
       })
       .catch(function(err) {
         console.log('failed to get gatherings: ' + err);
       });
     }
 
-    $scope.searchForGatherings = function() {
+    function constructQuery() {
 
-      console.log('SearchForGatherings() called:');
+      console.log('Construct Query has been enetered');
 
-      var query = null;
+      var query = {};
+      var startDate;
+      var endDate;
+      var futureDate;
 
-      if($scope.searchCoords !== null) {
+      console.log("Date Filter Used:" + $scope.searchOptions.dateFilter.value);
 
-        if(query === null){
-          query = {};
+      //$scope.showDate = false;
+
+      if($scope.searchOptions.dateFilter.value !== 0 ) {
+
+        switch($scope.searchOptions.dateFilter.value) {
+          case 1: // Today
+            
+            startDate = new Date(moment().hour(0).minute(0).second(0));
+            endDate = new Date(moment().hour(23).minute(59).second(59));
+            $scope.selectedDate = new Date(startDate);
+
+            $scope.isDateDisabled = true;
+            
+            console.log('Today Start:' + startDate);
+            console.log('Today End:' + endDate);
+            break;
+
+          case 2: // Tomorrow             
+
+            futureDate = moment().add(1, 'd');
+            startDate = new Date(moment(futureDate).hour(0).minute(0).second(0));
+            endDate = new Date(moment(futureDate).hour(23).minute(59).second(59));
+            $scope.selectedDate = new Date(startDate);
+
+            $scope.isDateDisabled = true;
+
+            //console.log('Tomorrow Start:' + startDate);
+            //console.log('Tomorrow End:' + endDate);
+
+            break;
+          case 3: // Next Week
+            startDate = new Date(moment($scope.selectedDate).hour(0).minute(0).second(0));
+            futureDate = moment($scope.selectedDate).add(1, 'w');
+            endDate = new Date(moment(futureDate).hour(23).minute(59).second(59));
+
+            $scope.isDateDisabled = false;
+
+            //console.log('Tomorrow Start:' + startDate);
+            //console.log('Tomorrow End:' + endDate);
+            break;
+          case 4: // Next Month
+            startDate = new Date(moment($scope.selectedDate).hour(0).minute(0).second(0));
+            futureDate = moment($scope.selectedDate).add(1, 'M');
+            endDate = new Date(moment(futureDate).hour(23).minute(59).second(59));
+
+            $scope.isDateDisabled = false;
+
+            //console.log('Tomorrow Start:' + startDate);
+            //console.log('Tomorrow End:' + endDate);
+            break;
+          case 5: // Next Year
+            startDate = new Date(moment($scope.selectedDate).hour(0).minute(0).second(0));
+            futureDate = moment($scope.selectedDate).add(1, 'y');
+            endDate = new Date(moment(futureDate).hour(23).minute(59).second(59));
+
+            $scope.isDateDisabled = false;
+
+            //console.log('Tomorrow Start:' + startDate);
+            //console.log('Tomorrow End:' + endDate);
+            break;
+
         }
 
-        query['location.location'] = {
-          $near: {
-            $geometry: { type: "Point",  coordinates: $scope.searchCoords },
-            $minDistance: 0.01,
-            $maxDistance: $scope.searchOptions.distance
-
-          }
+        query.gathering_start_date_time = {
+          $gt:startDate,
+          $lt:endDate
         };
-      } else {
-        query = {};
-      } 
 
+      }
+
+      // Check if a gathering type filter was used
       if ($scope.searchOptions.type === null) {
         //console.log("Search TYPE is BADDDDDDDDDDDDDDDDDDD");
       }else{
-
-        query['type.0._id'] = $scope.searchOptions.type._id;       
-        
+        query['type.0._id'] = $scope.searchOptions.type._id;        
       }
 
       if ($scope.searchOptions.topic === null) {
         //console.log("Search TOPIC is BADDDDDDDDDDDDDDDDDDD");
       }else{
+        query['topic.0._id'] = $scope.searchOptions.topic._id;        
+      } 
 
-        query['topic.0._id'] = $scope.searchOptions.topic._id;       
-        
-      }       
+      if($scope.searchOptions.coords === null) {
+        // Dont include address in the search
+        console.log('Dont use location');
+      } else {
+
+        query['location.location'] = {
+          $near: {
+            $geometry: { type: "Point",  coordinates: $scope.searchOptions.coords },
+            $minDistance: 0.01,
+            $maxDistance: $scope.searchOptions.distance
+
+          }
+        };
+      } 
+
+      return query;
 
 
 
-      //console.log(query);
 
-      getGatherings(query);
+    }
 
-      $scope.newQuery = query;
+    $scope.resetFilters = function() {
 
-      //$rootScope.$broadcast('event:searchQueryChanged', query);
+      $scope.searchOptions = {
+        distance: 1000000000,
+        coords: null,
+        topic: null,
+        type: null,
+        dateFilter: $scope.dateSearchOptions[3]
+      };
+
+      $scope.updateQuery();
+
+
+    };
+
+    $scope.searchForGatherings = function() {
+
+      // $scope.newQuery = query;
+
+      // //$rootScope.$broadcast('event:searchQueryChanged', query);
 
       $scope.numToShow = 0;
 
@@ -327,23 +436,36 @@
       console.log("check for address called:" + value);
 
       if(value === true) {
+        $scope.place = null;
         getCurrentLocation();
       } else {
-        //console.log('Do not use current address');
+        //console.log('Do not use current address');/
         $scope.searchCoords = null;
+        $scope.searchOptions.coords = null;
+        $scope.updateQuery();
+
       }
+
     };
 
-    $scope.$on('event:searchQueryChanged', function(event, val) {
-      console.log('event:searchQueryChanged');
+    $scope.updateQuery = function() {
+      console.log('updateQuery called:');
 
-      var query = val;
-      console.log(query);
+      var query = constructQuery(); 
+      getGatherings(query); 
 
-      if(null !== query) {
-        getGatherings(query);
-      }
-    });
+    };
+
+    // $scope.$on('event:searchQueryChanged', function(event, val) {
+    //   console.log('event:searchQueryChanged');
+
+    //   var query = val;
+    //   console.log(query);
+
+    //   if(null !== query) {
+    //     getGatherings(query);
+    //   }
+    // });
 
     $scope.$on('g-places-autocomplete:select', function (event, param) {
 
@@ -351,12 +473,17 @@
 
       if (typeof components === 'undefined') {
         console.log("No address has been given");
+        $scope.searchOptions.coords = null;
       }else{
         console.log("We Have an address object");
 
         //console.log("LAT:" + vm.address_details.geometry.location.lat);
 
         $scope.searchCoords = [param.geometry.location.lng(), param.geometry.location.lat()];
+
+        $scope.searchOptions.coords = $scope.searchCoords;
+
+        $scope.updateQuery();
 
       }
     });

@@ -54,7 +54,8 @@
 	width: 100% !important;
 	max-width: 100% !important;
 	font-size: 16px !important;
-	height: 54px !important;
+	height: 74px !important;
+	direction: ltr !important;
 }
 
 
@@ -141,6 +142,11 @@ label.item.has-error {
 	color: #ffffff;
 }
 
+.card-body {
+	background-color: #454545 !important;
+	color: #ffffff;
+}
+
 .custom-icon {
   color : red !important;
 }
@@ -149,15 +155,6 @@ label.item.has-error {
 	font-size: 12px !important;
 }
 
-/*.item-complex.item-icon-left .item-content {
-    padding-left: 14px;
-    padding-right: 20px !important;
+.bg-date-filter {
+	background-color: #7777ff !important;
 }
-
-.item-icon-left {
-    padding-left: 14px;
-}
-
-.div-logout {
-	margin-top: 40px;
-}*/

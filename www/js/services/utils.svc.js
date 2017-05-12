@@ -39,6 +39,34 @@
       notes: ''
     };
 
+    var dateSearchOptions = [
+      {
+        name: 'No Date Filter',
+        value: 0
+      },
+      {
+        name: 'Starting Today',
+        value: 1
+      },
+      {
+        name: 'Starting Tomorrow',
+        value: 2
+      },
+      {
+        name: 'Starting Within One Week From',
+        value: 3
+      },
+      {
+        name: 'Starting Within One Month From',
+        value: 4
+      },
+      {
+        name: 'Starting Within One Year From',
+        value: 5
+      }
+
+    ];
+
     var query = null;
 
     var getSearchQuery = function() {
@@ -60,6 +88,10 @@
       return blankLocation;
     };
 
+    var getDateSearchOptions = function() {
+      return dateSearchOptions;
+    };
+
     var showUpdateDescription = function(contact){
       console.log('showUpdateDescription called in Utils service');
       return modalService.show('templates/modals/update.description.modal.html', 'GatheringUpdateController as vm', contact);
@@ -75,7 +107,8 @@
       getSearchQuery: getSearchQuery,
       setSearchQuery: setSearchQuery,
       showUpdateDescription: showUpdateDescription,
-      showUpdateBanner: showUpdateBanner
+      showUpdateBanner: showUpdateBanner,
+      getDateSearchOptions: getDateSearchOptions
     };
 
 

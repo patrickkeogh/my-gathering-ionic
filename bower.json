@@ -10,6 +10,7 @@
     "ionic-datepicker": "^1.2.1",
     "angular-google-places-autocomplete": "^0.2.7",
     "angular-messages": "1.5.3",
-    "angular-filepicker": "^1.1.4"
+    "angular-filepicker": "^1.1.4",
+    "angular-moment": "^1.0.1"
   }
 }

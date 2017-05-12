@@ -9,7 +9,8 @@
       'ngCordova',
       'ngMessages',
       'google.places',
-      'angular-filepicker'
+      'angular-filepicker',
+      'angularMoment'
     ])
     .config(config)
     .constant('Constants', {
@@ -21,7 +22,7 @@
     .run(run);
     
     config.$inject = ['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider', 'ionicTimePickerProvider', 'ionicDatePickerProvider', 'filepickerProvider'];
-    run.$inject = ['$ionicPlatform', '$rootScope', 'Authentication'];
+    run.$inject = ['$ionicPlatform', '$ionicPopup', '$rootScope', 'Authentication'];
     
     function config($stateProvider, $urlRouterProvider, $ionicConfigProvider, ionicTimePickerProvider, ionicDatePickerProvider, filepickerProvider) {
 
@@ -209,7 +210,7 @@
       $urlRouterProvider.otherwise('/app/home');
     }
 
-    function run($ionicPlatform, $rootScope, Authentication) {
+    function run($ionicPlatform, $ionicPopup, $rootScope, Authentication) {
 
       // Redirect to login if route requires auth and you're not logged in
         $rootScope.$on('$stateChangeSuccess', function(event, next) {
@@ -234,6 +235,23 @@
         });
 
       $ionicPlatform.ready(function() {
+        
+        // if(window.connection) {
+        //   if(navigator.connection.type == Connection.NONE) {
+        //     $ionicPopup.confirm({
+        //                 title: "Internet Disconnected",
+        //                 content: "The internet is disconnected on your device."
+        //             })
+        //             .then(function(result) {
+        //                 if(!result) {
+        //                     ionic.Platform.exitApp();
+        //                 }
+        //             });
+
+        //   }
+        // }
+
+
         if(window.cordova && window.cordova.plugins.Keyboard) {
           // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
           // for form inputs)
@@ -244,6 +262,8 @@
           // a much nicer keyboard experience.
           cordova.plugins.Keyboard.disableScroll(true);
         }
+
+
         if(window.StatusBar) {
           StatusBar.styleDefault();
           //StatusBar.backgroundColorByHex('#565656');
@@ -253,6 +273,8 @@
     }
     
 })();
+
+
 
 
 
